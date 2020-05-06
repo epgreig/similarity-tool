@@ -2,8 +2,7 @@ library('mltools')
 library('data.table')
 library('corrplot')
 
-setwd("/Users/ethangreig/Documents/Miscellaneous/Quick Learn")
-data <- read.csv('PokemonData.csv')
+data <- read.csv('pokemon_data.csv')
 
 # Import Data
 table <- data.table(data)
