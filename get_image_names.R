@@ -12,3 +12,6 @@ get_image_name <- function(pokedex, name) {
 }
 
 table$Image.Name <- get_image_name(table$Pokedex, table$Name)
+
+#for (filename in table$Image.Name)
+#  file.copy(paste0("images/", filename), "images_temp")
