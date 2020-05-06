@@ -4,9 +4,9 @@ library('data.table')
 # Import Data
 data <- read.csv('pokemon_data.csv')
 table <- data.table(data)
-types <- c(as.character(unique(table$Primary.Type)), "Flying")
 
 # One-Hot
+types <- c(as.character(unique(table$Primary.Type)), "Flying")
 table <- one_hot(table, c("Legendary.Type", "Primary.Type", "Secondary.Type"))
 
 # Combine Primary and Secondary Type Features

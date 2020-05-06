@@ -80,6 +80,7 @@ ID,Pokedex,Name,Legendary Type,Height,Weight,Primary Type,Secondary Type,Male Ra
 267,178,Xatu,,1.5,15,Psychic,Flying,50,50,70,Johto,65,75,70,95,70,95,470,75
 280,181,Ampharos,,1.4,61.5,Electric,,50,50,70,Johto,90,75,85,115,90,55,510,45
 67,182,Bellossom,,0.4,5.8,Grass,,50,50,70,Johto,75,80,95,90,100,50,490,45
+284,184,Azumarill,,0.8,28.5,Water,Fairy,50,50,70,Johto,100,50,80,60,80,50,420,75
 285,185,Sudowoodo,,1.2,38,Rock,,50,50,70,Johto,70,110,115,30,65,30,420,65
 286,186,Politoed,,1.1,33.9,Water,,50,50,70,Johto,90,75,75,90,100,70,500,45
 289,189,Jumpluff,,0.8,3,Grass,Flying,50,50,70,Johto,75,55,70,55,95,110,460,45
@@ -140,7 +141,6 @@ ID,Pokedex,Name,Legendary Type,Height,Weight,Primary Type,Secondary Type,Male Ra
 420,292,Shedinja,,0.8,1.2,Bug,Ghost,0,0,70,Hoenn,1,90,45,30,30,40,236,45
 423,295,Exploud,,1.5,84,Normal,,50,50,70,Hoenn,104,91,63,91,73,68,490,45
 425,297,Hariyama,,2.3,253.8,Fighting,,75,25,70,Hoenn,144,120,60,40,60,50,474,200
-426,298,Azurill,,0.2,2,Normal,Fairy,25,75,70,Hoenn,50,20,40,20,40,20,190,150
 429,301,Delcatty,,1.1,32.6,Normal,,25,75,70,Hoenn,70,65,65,55,55,90,400,60
 430,302,Sableye,,0.5,11,Dark,Ghost,50,50,35,Hoenn,50,75,75,65,65,50,380,45
 431,303,Mawile,,0.6,11.5,Steel,Fairy,50,50,70,Hoenn,50,85,85,55,55,50,380,45
@@ -172,9 +172,6 @@ ID,Pokedex,Name,Legendary Type,Height,Weight,Primary Type,Secondary Type,Male Ra
 476,348,Armaldo,,1.5,68.2,Rock,Bug,87.5,12.5,70,Hoenn,75,125,100,70,80,45,495,45
 478,350,Milotic,,6.2,162,Water,,50,50,70,Hoenn,95,60,79,100,125,81,540,60
 479,351,Castform,,0.3,0.8,Normal,,50,50,70,Hoenn,70,70,70,70,70,70,420,45
-1565,351,Castform-Sunny,,0.3,0.8,Fire,,50,50,70,Hoenn,70,70,70,70,70,70,420,45
-1566,351,Castform-Rainy,,0.3,0.8,Water,,50,50,70,Hoenn,70,70,70,70,70,70,420,45
-1567,351,Castform-Snowy,,0.3,0.8,Ice,,50,50,70,Hoenn,70,70,70,70,70,70,420,45
 480,352,Kecleon,,1,22,Normal,,50,50,70,Hoenn,60,90,70,60,120,40,440,200
 482,354,Banette,,1.1,12.5,Ghost,,50,50,35,Hoenn,64,115,65,83,63,65,455,45
 485,357,Tropius,,2,100,Grass,Flying,50,50,70,Hoenn,99,68,83,72,87,51,460,200
