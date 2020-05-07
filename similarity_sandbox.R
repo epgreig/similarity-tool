@@ -53,7 +53,7 @@ table_numeric <- table_scaled[, -non_scaling_columns, with=FALSE]
 features_size <- c("Height", "Weight")
 features_stats <- c("Health", "Attack", "Defense", "Special.Attack", "Special.Defense", "Speed")
 features_types <- combined_col_names
-features_gender <- c("Male.Dominant", "Female.Dominant", "Genderless")
+features_gender <- c("Male.Dominant", "Female.Dominant")
 features_misc <- c("Base.Happiness", "Catch.Rate")
 
 # Generate correlation matrix
@@ -73,7 +73,7 @@ corr_matrix["Type_Dark","Base.Happiness"]
 corr_matrix["Base.Happiness", "Weight"]
 corr_matrix["Base.Happiness", "Female.Dominant"]
 corr_matrix["Catch.Rate","Special.Attack"]
-corr_matrix["Catch.Rate","Genderless"]
+#corr_matrix["Catch.Rate","Genderless"]
 
 # Factor Re-Weighting
 #table_numeric[,"Weight"] <- table_numeric[,"Weight"] / 2
@@ -162,3 +162,12 @@ max(log_scores)
 sim <- table_numeric / sqrt(rowSums(table_numeric * table_numeric))
 cosine_scores <- as.matrix(sim) %*% t(as.matrix(sim))
 diag(cosine_scores) <- rowMeans(cosine_scores)
+
+most_similar <- max.col(cosine_scores)
+
+x <- 1:276
+for (i in 1:276){
+  x[i] <- cosine_scores[i,most_similar[i]]
+}
+
+match(min(x),x)

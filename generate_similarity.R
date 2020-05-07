@@ -54,9 +54,21 @@ features_misc <- c("Base.Happiness", "Catch.Rate")
 
 table_numeric <- table_numeric[, c(features_size, features_stats, features_types, features_gender, features_misc), with=FALSE]
 
+# Calculate Scores and Most Similar
 sim <- table_numeric / sqrt(rowSums(table_numeric * table_numeric))
 cosine_scores <- as.matrix(sim) %*% t(as.matrix(sim))
 diag(cosine_scores) <- rowMeans(cosine_scores)
-
 most_similar <- max.col(cosine_scores)
+
+
+# Get Image Name
+get_image_name <- function(pokedex, name) {
+  suffix <- tolower(sub("^[^-]*", "", name))
+  image_name <- paste0(pokedex, suffix, ".png")
+  return(image_name)
+}
+
+table$Image.Name <- get_image_name(table$Pokedex, table$Name)
+
+# Combine into one table
 table_with_scores <- cbind(table, cosine_scores, most_similar)
