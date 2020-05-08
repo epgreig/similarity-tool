@@ -1,33 +1,63 @@
-library(shiny)
+library('shiny')
+library('DT')
 
-source('generate_similarity.R')
-table <- table_with_scores
+source('prepare_app_data.R')
 
-ui <- pageWithSidebar(
-  headerPanel("PKMN Similarity Tool"),
-  sidebarPanel(
-    # Input: Selector for variable to plot against mpg ----
-    selectizeInput("pokemon1", "Pokemon 1:", table$Name, selected="Charizard"),
-    selectizeInput("pokemon2", "Pokemon 2:", table$Name, selected="Blastoise"),
-    
-    # Input: Checkbox for whether outliers should be included ----
-    checkboxInput("outliers", "Show outliers", TRUE)
+ui <- fluidPage(
+  
+  titlePanel(
+    h1("PKMN Similarity Tool", align="center")
+    ),
+  
+  fluidRow(column(12, h1(""))),
+
+  fluidRow(
+    column(3, offset=1,
+           selectizeInput("pokemon1", "Pokemon 1:", table$Name, selected="Charizard")),
+    column(4,
+           h1(textOutput(outputId = 'similarity'), align="center")),
+    column(3,
+           selectizeInput("pokemon2", "Pokemon 2:", table$Name, selected="Blastoise"))
   ),
   
-  # Main panel for displaying outputs ----
-  mainPanel()
+  fluidRow(column(3, align="center",
+                  imageOutput(outputId = 'image1')),
+           column(6, align="center",
+                  #DT::dataTableOutput(outputId = 'grid')),
+                  tableOutput(outputId = 'grid')),
+           column(3, align="center",
+                  imageOutput(outputId = 'image2'))
+  ),
+
+  fluidRow(
+    column(12, h3(""))
+  ),
+  
+  renderImage(img("3.png")),
 )
 
-server <- function(input, output) {
-  refresh_input1 <- reactive({
-    table_index1 <- which(table$Name == input$pokemon1)
-    image_file1 <- table[table_index1, "Image.Name"]
-  })
+server <- function(input, output, session) {
   
-  refresh_input2 <- reactive({
-    table_index2 <- which(table$Name == input$pokemon1)
-    image_file2 <- table[table_index2, "Image.Name"]
-  })
+  get_index1 <- reactive({ which(table$Name == input$pokemon1) })
+  get_index2 <- reactive({ which(table$Name == input$pokemon2) })
+
+  output$similarity <- renderText({ paste0(100*round(cosine_scores[get_index1(), get_index2()], digits=2), "%") })
+  
+  output$image1 <- renderImage({
+    list(src = as.character(table[get_index1(), "Image.Name"]))
+  }, deleteFile=FALSE)
+
+  output$image2 <- renderImage({
+    list(src = as.character(table[get_index2(), "Image.Name"]))
+  }, deleteFile=FALSE)
+  
+  output$height1 <- renderText(table[get_index1(), "Health"])
+  #output$grid <- DT::renderDataTable({ grid })
+  grid <- data.table(grid)
+  output$grid <- renderTable({ grid })
+  #output$image1 <- renderImage(png(table[get_pokemon1(), "Image.Name"]))
+  #output$caption <- renderText({ image_file2 })co
+  #output$corr_plot <- renderPlot({ corrplot(cor(table_numeric), method="circle", type="upper", tl.col="black", diag=FALSE, tl.srt=60, tl.cex = 0.6) })
   
   #output$Health1 <- table[table_index1,"Health"]
   # Return the formula text for printing as a caption ----

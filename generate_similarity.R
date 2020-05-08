@@ -3,11 +3,11 @@ library('data.table')
 
 # Import Data
 data <- read.csv('pokemon_data.csv')
-table <- data.table(data)
+data <- data.table(data)
 
 # One-Hot
-types <- c(as.character(unique(table$Primary.Type)), "Flying")
-table <- one_hot(table, c("Legendary.Type", "Primary.Type", "Secondary.Type"))
+types <- c(as.character(unique(data$Primary.Type)), "Flying")
+table <- one_hot(data, c("Legendary.Type", "Primary.Type", "Secondary.Type"))
 
 # Combine Primary and Secondary Type Features
 table$Primary.Type_Flying <- 0
@@ -41,7 +41,7 @@ table$Secondary.Type_ <- NULL
 table$Base.Stat.Total <- NULL
 
 # Identify non-numeric fields
-non_scaling_columns <- c("Name","ID","Pokedex","Region.of.Origin")
+non_scaling_columns <- c("Name","Pokedex","Region.of.Origin")
 table_scaled <- cbind(table[, non_scaling_columns, with=FALSE], scale(table[, -non_scaling_columns, with=FALSE]))
 table_numeric <- table_scaled[, -non_scaling_columns, with=FALSE]
 
@@ -61,14 +61,14 @@ diag(cosine_scores) <- rowMeans(cosine_scores)
 most_similar <- max.col(cosine_scores)
 
 
-# Get Image Name
+# Get Image Names
 get_image_name <- function(pokedex, name) {
   suffix <- tolower(sub("^[^-]*", "", name))
-  image_name <- paste0(pokedex, suffix, ".png")
+  image_name <- paste0("images/", pokedex, suffix, ".png")
   return(image_name)
 }
 
 table$Image.Name <- get_image_name(table$Pokedex, table$Name)
 
 # Combine into one table
-table_with_scores <- cbind(table, cosine_scores, most_similar)
+table_with_scores <- cbind(table, most_similar)
