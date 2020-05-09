@@ -58,7 +58,7 @@ features_misc <- c("Base.Happiness", "Catch.Rate")
 
 # Generate correlation matrix
 table_numeric <- table_numeric[, c(features_size, features_stats, features_types, features_gender, features_misc), with=FALSE]
-corr_matrix <- corrplot(cor(table_numeric), method="circle", type="upper", tl.col="black", diag=FALSE, tl.srt=60, tl.cex = 0.6)
+corr_matrix <- corrplot(cor(table_numeric), method="circle", type="upper", tl.col="black", diag=FALSE, tl.srt=60, tl.cex = 0.7)
 
 # Notable correlations
 corr_matrix["Height", "Weight"]
