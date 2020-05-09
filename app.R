@@ -9,7 +9,7 @@ ui <- fluidPage(
     h1("PKMN Similarity Tool", align="center")
     ),
   
-  fluidRow(column(12, h1(""))),
+  br(),
 
   fluidRow(
     column(4, align="center",
@@ -20,17 +20,21 @@ ui <- fluidPage(
            selectizeInput("pokemon2", "Pokemon 2:", table$Name, selected="Blastoise"))
   ),
   fluidRow(
-    column(4, align="center",
+    column(2, align="center",
            actionButton("find_match1", "Find Most Similar")),
+    column(2, align="center",
+           actionButton("find_mismatch1", "Find Most Different")),
     column(4),
-    column(4, align="center",
-           actionButton("find_match2", "Find Most Similar"))
+    column(2, align="center",
+           actionButton("find_match2", "Find Most Similar")),
+    column(2, align="center",
+           actionButton("find_mismatch2", "Find Most Different"))
   ),
   br(),
   
-  fluidRow(column(4,
+  fluidRow(column(4, align="center",
                   imageOutput(outputId = 'image1')),
-           column(4,
+           column(4, 
                   #DT::dataTableOutput(outputId = 'grid')),
                   div(tableOutput(outputId = 'grid'), style="font-size:120%;text-align:center"),
                   tags$head(tags$style(type = "text/css", "#grid th {display:none;}"))),
@@ -61,7 +65,7 @@ server <- function(input, output, session) {
   }, deleteFile=FALSE)
   
   output$similarity <- renderText({ paste0(100*round(cosine_scores[get_index1(), get_index2()], digits=2), "%") })
-  output$grid <- renderTable({ get_grid() })
+  output$grid <- renderTable({ get_grid() }, align="c")
   
   observeEvent(input$find_match1, {
     updateTextInput(session, 'pokemon2', value=table$Name[table$most_similar[get_index1()]])
@@ -69,6 +73,14 @@ server <- function(input, output, session) {
   
   observeEvent(input$find_match2, {
     updateTextInput(session, 'pokemon1', value=table$Name[table$most_similar[get_index2()]])
+  })
+  
+  observeEvent(input$find_mismatch1, {
+    updateTextInput(session, 'pokemon2', value=table$Name[table$most_dissimilar[get_index1()]])
+  })
+  
+  observeEvent(input$find_mismatch2, {
+    updateTextInput(session, 'pokemon1', value=table$Name[table$most_dissimilar[get_index2()]])
   })
 }
 

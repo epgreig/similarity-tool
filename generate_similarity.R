@@ -58,8 +58,9 @@ table_numeric <- table_numeric[, c(features_size, features_stats, features_types
 sim <- table_numeric / sqrt(rowSums(table_numeric * table_numeric))
 cosine_scores <- as.matrix(sim) %*% t(as.matrix(sim))
 diag(cosine_scores) <- rowMeans(cosine_scores)
-most_similar <- max.col(cosine_scores)
 
+most_similar <- max.col(cosine_scores)
+most_dissimilar <- max.col(-cosine_scores)
 
 # Get Image Names
 get_image_name <- function(pokedex, name) {
@@ -71,4 +72,4 @@ get_image_name <- function(pokedex, name) {
 table$Image.Name <- get_image_name(table$Pokedex, table$Name)
 
 # Combine into one table
-table_with_scores <- cbind(table, most_similar)
+table_with_scores <- cbind(table, most_similar, most_dissimilar)

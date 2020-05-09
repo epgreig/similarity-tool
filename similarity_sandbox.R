@@ -45,7 +45,7 @@ table$Male.Ratio <- NULL
 table$Female.Ratio <- NULL
 
 # Identify numeric fields
-non_scaling_columns <- c("Name","ID","Pokedex","Region.of.Origin")
+non_scaling_columns <- c("Name","Pokedex","Region.of.Origin")
 table_scaled <- cbind(table[, non_scaling_columns, with=FALSE], scale(table[, -non_scaling_columns, with=FALSE]))
 table_numeric <- table_scaled[, -non_scaling_columns, with=FALSE]
 
@@ -164,9 +164,12 @@ cosine_scores <- as.matrix(sim) %*% t(as.matrix(sim))
 diag(cosine_scores) <- rowMeans(cosine_scores)
 
 most_similar <- max.col(cosine_scores)
+length(unique(most_similar))
+most_dissimilar <- max.col(-cosine_scores)
+length(unique(most_dissimilar))
 
-x <- 1:276
-for (i in 1:276){
+x <- 1:nrow(table)
+for (i in 1:nrow(table)){
   x[i] <- cosine_scores[i,most_similar[i]]
 }
 

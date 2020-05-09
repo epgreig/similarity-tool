@@ -1,7 +1,7 @@
 library('data.table')
 
 source('generate_similarity.R')
-table <- table_with_scores[,c("Name", "Image.Name", "most_similar")]
+table <- table_with_scores[,c("Name", "Image.Name", "most_similar", "most_dissimilar")]
 diag(cosine_scores) <- 1
 
 grid_data <- table[,c("Name")]
@@ -23,9 +23,9 @@ grid_data$Name <- NULL
 grid_data <- as.matrix(grid_data)
 
 grid <- matrix(0, nrow = 13, ncol = 3)
-grid[,2] <- c("Type", "Health", "Attack", "Defense", "Special Attack",
-              "Special Defense", "Speed", "Height (m)", "Weight (kg)",
-              "Base Happiness", "Male %", "Female %", "Catch Rate")
+grid[,2] <- c("Type", "Health", "Attack", "Defense", "Sp. Attack",
+              "Sp. Defense", "Speed", "Height (m)", "Weight (kg)",
+              "Happiness", "Male %", "Female %", "Catch Rate")
 
 grid[,1] <- grid_data[99,]
 grid[,3] <- grid_data[200,]
