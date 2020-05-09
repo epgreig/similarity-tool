@@ -1,6 +1,7 @@
 library('shiny')
 library('DT')
 
+source('conditional_formatting.R')
 source('prepare_app_data.R')
 
 ui <- fluidPage(
