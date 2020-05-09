@@ -75,9 +75,9 @@ server <- function(input, output, session) {
         rowCallback = JS(rowCallback)
         )
     ) %>% formatStyle(
-      columns = c(1,3), width='100px',
+      columns = c(2,4), width='100px',
       fontSize="12pt",
-      fontWeight = 'bold'
+      fontWeight = 'bold',
       )
   )
   
