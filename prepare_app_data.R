@@ -1,8 +1,12 @@
 library('data.table')
 
 source('generate_similarity.R')
+
 table <- table_with_scores[,c("Name", "Image.Name", "most_similar", "most_dissimilar")]
 diag(cosine_scores) <- 1
+
+break_points <- function(x) stats::quantile(x, probs = seq(.05, .95, .05), na.rm = TRUE)
+red_shade <- function(x) round(seq(255, 40, length.out = length(x) + 1), 0) %>% {paste0("rgb(255,", ., ",", ., ")")}
 
 grid_data <- table[,c("Name")]
 grid_data$Type <- ifelse(data$Secondary.Type=="", paste0(data$Primary.Type), paste0(data$Primary.Type, ", ", data$Secondary.Type))

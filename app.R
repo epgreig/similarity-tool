@@ -34,9 +34,8 @@ ui <- fluidPage(
   
   fluidRow(column(4, align="center",
                   imageOutput(outputId = 'image1')),
-           column(4, 
-                  #DT::dataTableOutput(outputId = 'grid')),
-                  div(tableOutput(outputId = 'grid'), style="font-size:120%;text-align:center"),
+           column(4,align="center",
+                  div(dataTableOutput(outputId = 'grid'), style="font-size:120%;text-align:center"),
                   tags$head(tags$style(type = "text/css", "#grid th {display:none;}"))),
            column(4, align="center",
                   imageOutput(outputId = 'image2'))
@@ -65,7 +64,20 @@ server <- function(input, output, session) {
   }, deleteFile=FALSE)
   
   output$similarity <- renderText({ paste0(100*round(cosine_scores[get_index1(), get_index2()], digits=2), "%") })
-  output$grid <- renderTable({ get_grid() }, align="c")
+  output$grid <- renderDataTable(
+    DT::datatable(
+      get_grid(),
+      options = list(
+        dom='t',
+        pageLength = 20,
+        rowCallback = JS(rowCallback)
+        )
+    ) %>% formatStyle(
+      columns = c(1,3), width='100px',
+      fontSize="13pt",
+      fontWeight = 'bold'
+      )
+  )
   
   observeEvent(input$find_match1, {
     updateTextInput(session, 'pokemon2', value=table$Name[table$most_similar[get_index1()]])
