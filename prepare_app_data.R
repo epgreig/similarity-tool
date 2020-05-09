@@ -19,7 +19,13 @@ grid_data$Male.Ratio <- data$Male.Ratio
 grid_data$Female.Ratio <- data$Female.Ratio
 grid_data$Catch.Rate <- data$Catch.Rate
 
+grid_data$Name <- NULL
+grid_data <- as.matrix(grid_data)
+
 grid <- matrix(0, nrow = 13, ncol = 3)
 grid[,2] <- c("Type", "Health", "Attack", "Defense", "Special Attack",
               "Special Defense", "Speed", "Height (m)", "Weight (kg)",
               "Base Happiness", "Male %", "Female %", "Catch Rate")
+
+grid[,1] <- grid_data[99,]
+grid[,3] <- grid_data[200,]
