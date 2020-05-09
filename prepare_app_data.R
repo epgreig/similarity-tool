@@ -5,8 +5,10 @@ source('generate_similarity.R')
 table <- table_with_scores[,c("Name", "Image.Name", "most_similar", "most_dissimilar")]
 diag(cosine_scores) <- 1
 
+data <- read.csv('pokemon_data.csv')
+data <- data.table(data)
+
 grid_data <- table[,c("Name")]
-grid_data$Type <- ifelse(data$Secondary.Type=="", paste0(data$Primary.Type), paste0(data$Primary.Type, ", ", data$Secondary.Type))
 grid_data$Health <- data$Health
 grid_data$Attack <- data$Attack
 grid_data$Defense <- data$Defense
@@ -23,7 +25,7 @@ grid_data$Catch.Rate <- data$Catch.Rate
 grid_data$Name <- NULL
 grid_data <- as.matrix(grid_data)
 
-grid <- matrix(0, nrow = 13, ncol = 3)
-grid[,2] <- c("Type", "Health", "Attack", "Defense", "Sp. Attack",
+grid <- matrix(0, nrow = 12, ncol = 4)
+grid[,3] <- c("Health", "Attack", "Defense", "Sp. Attack",
               "Sp. Defense", "Speed", "Height (m)", "Weight (kg)",
               "Happiness", "Male %", "Female %", "Catch Rate")

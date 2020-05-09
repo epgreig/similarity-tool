@@ -50,8 +50,8 @@ server <- function(input, output, session) {
   get_index2 <- reactive({ which(table$Name == input$pokemon2) })
   
   get_grid <- reactive({
-    grid[,1] <- grid_data[get_index1(),]
-    grid[,3] <- grid_data[get_index2(),]
+    grid[,2] <- grid_data[get_index1(),]
+    grid[,4] <- grid_data[get_index2(),]
     grid
   })
 
@@ -68,6 +68,7 @@ server <- function(input, output, session) {
     DT::datatable(
       get_grid(),
       class='cell-border',
+      rownames=FALSE,
       options = list(
         dom='t',
         pageLength = 13,

@@ -5,14 +5,14 @@ source('generate_similarity.R')
 
 data <- read.csv('pokemon_data.csv')
 data <- data.table(data)
-test_data <- data[,c("Base.Stat.Total", features_stats, features_size, "Base.Happiness", "Male.Ratio", "Female.Ratio", "Catch.Rate"),with=FALSE]
+test_data <- data[,c(features_stats, features_size, "Base.Happiness", "Male.Ratio", "Female.Ratio", "Catch.Rate"),with=FALSE]
+test_data <- t(grid_data)
 
 break_points <- function(x) stats::quantile(x, probs = seq(.05, .95, .05), na.rm = TRUE)
 
 red_shade <- function(x) round(seq(0, 255, length.out = (length(x) + 1)/2), 0) %>% {paste0("rgb(255,", ., ",", ., ")")}
 green_shade <- function(x) round(seq(255, 0, length.out = (length(x) + 1)/2), 0) %>% {paste0("rgb(", ., ",", "255,", ., ")")}
 
-test_data <- t(test_data)
 test_brks <- apply(test_data, 1, break_points)
 
 test_brks[,"Male.Ratio"] <- seq(0,100,length.out = 19)
@@ -28,12 +28,12 @@ rowCallback <- "function(row, data, displayNum, index){"
 for(i in 1:ncol(test_data)){
   rowCallback <- c(
     rowCallback,
-    sprintf("var value = test_data[%d];", i)
+    sprintf("var value = data[%d];", i)
   )
   for(j in 1:nrow(test_data)){
     rowCallback <- c(
       rowCallback, 
-      sprintf("if(index === %d){", j),
+      sprintf("if(index === %d){", j-1),
       sprintf("$('td:eq(%d)',row).css('background-color', %s);", 
               i, styleInterval(test_brks[,j], test_clrs[,j])),
       "}"
