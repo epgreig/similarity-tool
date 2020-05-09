@@ -67,9 +67,10 @@ server <- function(input, output, session) {
   output$grid <- renderDataTable(
     DT::datatable(
       get_grid(),
+      class='cell-border',
       options = list(
         dom='t',
-        pageLength = 20,
+        pageLength = 13,
         rowCallback = JS(rowCallback)
         )
     ) %>% formatStyle(
