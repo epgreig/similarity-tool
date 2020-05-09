@@ -5,7 +5,7 @@ table <- table_with_scores[,c("Name", "Image.Name", "most_similar")]
 diag(cosine_scores) <- 1
 
 grid_data <- table[,c("Name")]
-grid_data$Type <- ifelse(data$Secondary.Type=="", paste0(data$Primary.Type), paste0(data$Primary.Type, " and ", data$Secondary.Type))
+grid_data$Type <- ifelse(data$Secondary.Type=="", paste0(data$Primary.Type), paste0(data$Primary.Type, ", ", data$Secondary.Type))
 grid_data$Health <- data$Health
 grid_data$Attack <- data$Attack
 grid_data$Defense <- data$Defense
