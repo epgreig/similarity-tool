@@ -173,4 +173,20 @@ for (i in 1:nrow(table)){
   x[i] <- cosine_scores[i,most_similar[i]]
 }
 
-match(min(x),x)
+#Finding Closest Pairs
+
+max(x)
+match(max(x),x) # Hitmonchan (45)
+x[45] <- 0.5
+match(max(x),x) # Hitmontop (114)
+x[114] <- 0.5
+match(max(x),x) # Plusle (149)
+x[149]
+x[149]<- 0.5
+match(max(x),x) # Minun (150)
+x[150] <- 0.5
+max(x)
+match(max(x),x) # Hitmonlee (44)
+x[44] <- 0.5
+max(x)
+match(max(x),x) # Alakazam (26), Espeon (87)
