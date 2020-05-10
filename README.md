@@ -1,7 +1,9 @@
 # Similarity Tool
 
+#### Link: [https://epgreig.shinyapps.io/similarity-tool/](https://epgreig.shinyapps.io/similarity-tool/?_ga=2.21943161.313882230.1588985783-2134019159.1588985783)
 This is a calculator which outputs a similarity score between two selected Pokemon. To visualize the results of this calculator I also created a web app, built from scratch using R Shiny.
 
+The link above is to the web app hosted on shinyapps.io (free account, 25 hours of usage per month). Alternatively, you can clone this repo, open the App.R file in R Studio with the codebase directory as your working directory and click "Run App" (Takes 30-45 seconds to open, for data pre-processing)
 
 ## Inspiration
 
@@ -38,3 +40,29 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 - Captures the essence of the pkmn rather than the scale of their features
 
 **No Machine Learning necessary! This is not a clustering problem, there is no reason to introduce ML into this problem when other statistical methods work perfectly well.
+
+
+## Results
+
+**Most Similar Pokemon Pairs**
+
+1. Hitmonchan and Hitmontop: 99.21%
+2. Plusle and Minun: 99.19%
+3. Hitmonlee and Hitmonchan: 98.1%
+4. Alakazam and Espeon: 97.8%
+
+**Among the pairs that don't share a type: highest is Mew and Shaymin: 52%
+
+**Most Unique Pokemon** (measured by lowest similarity score for closest match)
+
+1. Heatran: closest match 53% w/ Metagross
+2. Umbreon: closest match 56% w/ Mightyena
+3. Xatu: closest match 59% w/ Chimecho
+ 
+**Least Generic Pokemon** (measure by lowest average similarity score with all other Pokemon)
+
+1. Dialga: average match -3.1%
+
+**Most Generic Pokemon** (measure by lowest average similarity score with all other Pokemon)
+
+1. Bibarel: average match 3.2%
