@@ -72,9 +72,8 @@ diag(cosine_scores) <- rowMeans(cosine_scores)
 
 table_numeric_positive <- sweep(table_numeric,2, apply(table_numeric,2,min))
 sim <- table_numeric_positive / sqrt(rowSums(table_numeric_positive * table_numeric_positive))
-cosine_scores <- as.matrix(sim) %*% t(as.matrix(sim))
-diag(cosine_scores) <- rowMeans(cosine_scores)
-round(100*head(cosine_scores))
+cosine_scores_positive <- as.matrix(sim) %*% t(as.matrix(sim))
+diag(cosine_scores_positive) <- rowMeans(cosine_scores_positive)
 
 
 most_similar <- max.col(cosine_scores)
