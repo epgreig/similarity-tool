@@ -1,4 +1,4 @@
-Pokedex,Name,Pokemon Height,Pokemon Weight,Primary Type,Secondary Type,Male Ratio,Female Ratio,Base Happiness,Region of Origin,Health Stat,Attack Stat,Defense Stat,Special Attack Stat,Special Defense Stat,Speed Stat,Base Stat Total,Catch Rate,Primary Egg Group,Secondary Egg Group
+Pokedex,Name,Height,Weight,Primary Type,Secondary Type,Male Ratio,Female Ratio,Base Happiness,Region of Origin,Health Stat,Attack Stat,Defense Stat,Special Attack Stat,Special Defense Stat,Speed Stat,Base Stat Total,Catch Rate,Primary Egg Group,Secondary Egg Group
 3,Venusaur,2,100,Grass,Poison,87.5,12.5,70,Kanto,80,82,83,100,100,80,525,45,Monster,Grass
 3,Venusaur-Mega,2.4,155.5,Grass,Poison,87.5,12.5,70,Kalos,80,100,123,122,120,80,625,45,Monster,Grass
 6,Charizard,1.7,90.5,Fire,Flying,87.5,12.5,70,Kanto,78,84,78,109,85,100,534,45,Monster,Dragon

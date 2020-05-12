@@ -16,13 +16,14 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 ## Pokemon Similarity Calculator
 
 #### Eligible Pokemon
-- First 4 Generations of Pokemon Only
+- First 8 Generations of Pokemon Only
 - Fully-Evolved Pokemon Only
-- No Megas/Special Forms
+- No Gigantamax Forms
 #### Features
 - Type(s)
 - Base Stats (Health, Attack, Defense, Sp.Attack, Sp. Defense, Speed)
 - Height and Weight
+- Egg Group
 - Base Happiness
 - Gender Ratio
 - Catch Rate (lower Catch Rate => More difficult to capture)
