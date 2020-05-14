@@ -87,6 +87,16 @@ log_distances <- log(distances)
 most_similar <- max.col(-distances)
 most_different <- max.col(distances)
 
+# 294219 -> Lycanroc (493) and Lycanroc-Dusk (495)
+# cosine_scores[294219] <- 0.5
+# cosine_scores[295411] <- 0.5
+# 115416 -> Plusle (194) and Minun (195)
+# cosine_scores[115416] <- 0.5
+# cosine_scores[116012] <- 0.5
+# 277474 -> Gourgeist (465) and Gourgeist-Small (466)
+# cosine_scores[277474]<-0.5
+# cosine_scores[278070]<- 0.5
+
 length(unique(most_similar))
 
 # Manhattan

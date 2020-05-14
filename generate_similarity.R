@@ -56,13 +56,13 @@ table_numeric <- table_scaled[, -non_scaling_columns, with=FALSE]
 
 # Define similarity feature groupings
 features_size <- c("Height", "Weight")
-features_stats <- c("Health", "Attack", "Defense", "Special.Attack", "Special.Defense", "Speed")
+features_stats <- c("Health.Stat", "Attack.Stat", "Defense.Stat", "Special.Attack.Stat", "Special.Defense.Stat", "Speed.Stat")
 features_types <- combined_type_cols
 features_egg_groups <- combined_egg_cols
 features_gender <- c("Male.Dominant", "Female.Dominant", "Genderless")
 features_misc <- c("Base.Happiness", "Catch.Rate")
 
-table_numeric <- table_numeric[, c(features_size, features_stats, features_types, features_gender, features_misc), with=FALSE]
+table_numeric <- table_numeric[, c(features_size, features_stats, features_types, features_egg_groups, features_gender, features_misc), with=FALSE]
 
 distances <- as.matrix(dist(table_numeric, method = "manhattan", upper=TRUE))
 # Calculate Scores and Most Similar
@@ -75,9 +75,10 @@ sim <- table_numeric_positive / sqrt(rowSums(table_numeric_positive * table_nume
 cosine_scores_positive <- as.matrix(sim) %*% t(as.matrix(sim))
 diag(cosine_scores_positive) <- rowMeans(cosine_scores_positive)
 
-
 most_similar <- max.col(cosine_scores)
 most_dissimilar <- max.col(-cosine_scores)
+
+
 
 # Get Image Names
 get_image_name <- function(pokedex, name) {
