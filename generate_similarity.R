@@ -48,6 +48,7 @@ table$Secondary.Type_ <- NULL
 table$Secondary.Egg.Group_ <- NULL
 table$Egg.Group_Undiscovered <- NULL
 table$Base.Stat.Total <- NULL
+combined_egg_cols <- combined_egg_cols[combined_egg_cols != "Egg.Group_Undiscovered"]
 
 # Identify non-numeric fields
 non_scaling_columns <- c("Name","Pokedex","Region.of.Origin")
@@ -64,6 +65,10 @@ features_misc <- c("Base.Happiness", "Catch.Rate")
 
 table_numeric <- table_numeric[, c(features_size, features_stats, features_types, features_egg_groups, features_gender, features_misc), with=FALSE]
 
+# Scale down less important categories
+features_scale_down <- c(features_size, features_types, features_egg_groups, features_gender, features_misc)
+table_numeric[, features_scale_down] <- table_numeric[, features_scale_down, with=FALSE] / 2
+
 distances <- as.matrix(dist(table_numeric, method = "manhattan", upper=TRUE))
 # Calculate Scores and Most Similar
 sim <- table_numeric / sqrt(rowSums(table_numeric * table_numeric))
@@ -77,8 +82,6 @@ diag(cosine_scores_positive) <- rowMeans(cosine_scores_positive)
 
 most_similar <- max.col(cosine_scores)
 most_dissimilar <- max.col(-cosine_scores)
-
-
 
 # Get Image Names
 get_image_name <- function(pokedex, name) {

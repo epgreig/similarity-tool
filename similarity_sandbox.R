@@ -183,6 +183,28 @@ for (i in 1:nrow(table)){
   x[i] <- cosine_scores[i,most_similar[i]]
 }
 
+length(unique(most_similar))/nrow(table_numeric)
+length(cosine_scores[abs(cosine_scores) < 0.1])/length(cosine_scores)
+length(cosine_scores[abs(cosine_scores) < 0.2])/length(cosine_scores)
+# No Egg Groups
+# 
+# 43%
+# 76%
+# W/ Egg Groups
+# 46%
+# 82%
+# types and eggs div by sqrt(2)
+# 44%
+# 77%
+# types and eggs div by 2
+# 64% unique
+# 38%
+# 68%
+# all div by sqrt(2)
+# 63% unique
+# 44%
+# 77%
+
 #Finding Closest Pairs
 
 max(x)

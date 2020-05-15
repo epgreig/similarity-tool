@@ -16,6 +16,7 @@ grid_data$Defense <- data$Defense
 grid_data$Special.Attack <- data$Special.Attack
 grid_data$Special.Defense <- data$Special.Defense
 grid_data$Speed <- data$Speed
+grid_data$Egg.Group <- ifelse(data$Secondary.Egg.Group=="", paste0(data$Primary.Egg.Group), paste0(data$Primary.Egg.Group, ", ", data$Secondary.Egg.Group))
 grid_data$Height <- data$Height
 grid_data$Weight <- data$Weight
 grid_data$Base.Happiness <- data$Base.Happiness
@@ -26,8 +27,8 @@ grid_data$Catch.Rate <- data$Catch.Rate
 grid_data$Name <- NULL
 grid_data <- as.matrix(grid_data)
 
-grid <- matrix(0, nrow = 13, ncol = 4)
+grid <- matrix(0, nrow = 14, ncol = 4)
 grid[,1] <- ""
-grid[,3] <- c("Type","Health", "Attack", "Defense", "Sp. Attack",
-              "Sp. Defense", "Speed", "Height (m)", "Weight (kg)",
+grid[,3] <- c("Type", "Health", "Attack", "Defense", "Sp. Attack",
+              "Sp. Defense", "Speed", "Egg Group", "Height (m)", "Weight (kg)",
               "Happiness", "Male %", "Female %", "Catch Rate")

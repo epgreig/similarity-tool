@@ -5,7 +5,7 @@ source('generate_similarity.R')
 
 data <- read.csv('pokemon_data.csv')
 data <- data.table(data)
-test_data <- data[,c("Base.Stat.Total",features_stats, features_size, "Base.Happiness", "Male.Ratio", "Female.Ratio", "Catch.Rate"),with=FALSE]
+test_data <- data[,c("Base.Stat.Total", features_stats, "Base.Stat.Total", features_size, "Base.Happiness", "Male.Ratio", "Female.Ratio", "Catch.Rate"),with=FALSE]
 test_data <- t(test_data)
 
 break_points <- function(x) stats::quantile(x, probs = seq(.05, .95, .05), na.rm = TRUE)
