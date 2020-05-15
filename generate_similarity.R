@@ -85,7 +85,7 @@ most_dissimilar <- max.col(-cosine_scores)
 
 # Get Image Names
 get_image_name <- function(pokedex, name) {
-  suffix <- tolower(sub("^[^-]*", "", name))
+  suffix <- gsub(" ", "-", tolower(sub("^[^-]*", "", name)))
   image_name <- paste0("images/", pokedex, suffix, ".png")
   return(image_name)
 }
@@ -94,3 +94,10 @@ table$Image.Name <- get_image_name(table$Pokedex, table$Name)
 
 # Combine into one table
 table_with_scores <- cbind(table, most_similar, most_dissimilar)
+
+# for (filename in table$Image.Name)
+#   file.copy(paste0("images/", filename), "images_temp")
+
+#for (filename in table$Image.Name) {
+#    file.copy(filename, "images_temp")
+# }
