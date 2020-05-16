@@ -26,7 +26,7 @@ clrs <- rbind(red_clrs,green_clrs)
 
 rowCallback <- "function(row, data, displayNum, index){"
 
-for(i in 1:ncol(test_data)){
+for(i in 0:ncol(test_data)){
   rowCallback <- c(
     rowCallback,
     sprintf("var value = data[%d];", i)

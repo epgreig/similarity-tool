@@ -46,7 +46,6 @@ Pokedex,Name,Height,Weight,Primary Type,Secondary Type,Male Ratio,Female Ratio,B
 76,Golem-Alola,1.7,316,Rock,Electric,50,50,70,Alola,80,120,130,55,65,45,495,45,Mineral,
 78,Rapidash,1.7,95,Fire,,50,50,70,Kanto,65,100,70,80,80,105,500,60,Field,
 78,Rapidash-Galar,1.7,80,Psychic,Fairy,50,50,70,Galar,65,100,70,80,80,105,500,60,Field,
-79,Slowpoke-Galar,1.2,36,Psychic,,50,50,70,Galar,90,65,65,40,40,15,315,190,Monster,Water 1
 80,Slowbro,1.6,78.5,Water,Psychic,50,50,70,Kanto,95,75,110,100,80,30,490,75,Monster,Water 1
 80,Slowbro-Mega,2,120,Water,Psychic,50,50,70,Kalos,95,75,180,130,80,30,590,75,Monster,Water 1
 83,Farfetch'd,0.8,15,Normal,Flying,50,50,70,Kanto,52,90,55,58,62,60,377,45,Flying,Field
