@@ -52,7 +52,7 @@ combined_egg_cols <- combined_egg_cols[combined_egg_cols != "Egg.Group_Undiscove
 
 # Identify non-numeric fields
 non_scaling_columns <- c("Name","Pokedex","Region.of.Origin")
-table_scaled <- cbind(table[, non_scaling_columns, with=FALSE], scale(table[, -non_scaling_columns, with=FALSE]))
+table_scaled <- cbind(table[, non_scaling_columns, with=FALSE], scale(table[, -non_scaling_columns, with=FALSE], center=apply(table[, -non_scaling_columns, with=FALSE], 2, median)))
 table_numeric <- table_scaled[, -non_scaling_columns, with=FALSE]
 
 # scale(table[, -non_scaling_columns, with=FALSE], center=apply(table[, -non_scaling_columns, with=FALSE],2,median))
