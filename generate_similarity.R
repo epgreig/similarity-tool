@@ -55,6 +55,8 @@ non_scaling_columns <- c("Name","Pokedex","Region.of.Origin")
 table_scaled <- cbind(table[, non_scaling_columns, with=FALSE], scale(table[, -non_scaling_columns, with=FALSE]))
 table_numeric <- table_scaled[, -non_scaling_columns, with=FALSE]
 
+# scale(table[, -non_scaling_columns, with=FALSE], center=apply(table[, -non_scaling_columns, with=FALSE],2,median))
+
 # Define similarity feature groupings
 features_size <- c("Height", "Weight")
 features_stats <- c("Health.Stat", "Attack.Stat", "Defense.Stat", "Special.Attack.Stat", "Special.Defense.Stat", "Speed.Stat")

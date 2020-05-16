@@ -30,6 +30,11 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 
 ## Methodology
 
+#### Data Sources
+- Data: https://www.kaggle.com/mrdew25/pokemon-database
+- Images: https://www.kaggle.com/kvpratama/pokemon-images-dataset (Gen 1-6), https://www.kaggle.com/adityamhatre/pokemon-transparent-images-dataset (Gen 7), https://projectpokemon.org/docs/spriteindex_148/home-sprites-gen-8-r135/ (Gen 8)
+
+
 #### Data Processing
 - One-hot encoding Type data (treating Primary and Secondary Types as equivalent)
 - One-hot encoding Gender ratios into three binary variables: Male/Female Dominant (if gender ratio skews toward one or the other) or Genderless
