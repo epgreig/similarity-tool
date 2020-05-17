@@ -8,21 +8,21 @@ data <- data.table(data)
 test_data <- data[,c("Base.Stat.Total", features_stats, "Base.Stat.Total", features_size, "Base.Happiness", "Male.Ratio", "Female.Ratio", "Catch.Rate"),with=FALSE]
 test_data <- t(test_data)
 
-break_points <- function(x) stats::quantile(x, probs = seq(.05, .95, .05), na.rm = TRUE)
-
-red_shade <- function(x) round(seq(100, 255, length.out = (length(x) + 1)/2), 0) %>% {paste0("rgb(255,", ., ",", ., ")")}
-green_shade <- function(x) round(seq(255, 100, length.out = (length(x) + 1)/2), 0) %>% {paste0("rgb(", ., ",", "255,", ., ")")}
+num_brks <- 40
+break_points <- function(x) stats::quantile(x, probs = seq(1/num_brks, 1-1/num_brks, 1/1/num_brks), na.rm = TRUE)
 
 brks <- apply(test_data, 1, break_points)
 
-brks[,"Male.Ratio"] <- seq(0,100,length.out = 19)
-brks[,"Female.Ratio"] <- seq(0,100,length.out = 19)
-brks[,"Height"] <- seq(0,3,length.out = 19)
-brks[,"Base.Happiness"] <- seq(0,140,length.out = 19)
+brks[,"Male.Ratio"] <- seq(0,100,length.out = num_brks-1)
+brks[,"Female.Ratio"] <- seq(0,100,length.out = num_brks-1)
+brks[,"Height"] <- seq(0,3,length.out = num_brks-1)
+brks[,"Base.Happiness"] <- seq(0,140,length.out = num_brks-1)
 
-red_clrs <- apply(brks, 2, red_shade)
-green_clrs <- apply(brks, 2, green_shade)
-clrs <- rbind(red_clrs,green_clrs)
+red_clrs <- round(seq(80, 255, length.out = num_brks/2), 0) %>% {paste0("rgb(255,", ., ",", ., ")")}
+green_clrs <- round(seq(255, 80, length.out = num_brks/2), 0) %>% {paste0("rgb(", ., ",", "255,", ., ")")}
+clrs <- c(red_clrs,green_clrs)
+clrs[num_brks/2] <- "rgb(255,255,246)"
+clrs[num_brks/2+1] <- "rgb(255,255,246)"
 
 rowCallback <- "function(row, data, displayNum, index){"
 
@@ -36,7 +36,7 @@ for(i in 0:ncol(test_data)){
       rowCallback, 
       sprintf("if(index === %d){", j-1),
       sprintf("$('td:eq(%d)',row).css('background-color', %s);", 
-              i, styleInterval(brks[,j], clrs[,j])),
+              i, styleInterval(brks[,j], clrs)),
       "}"
     )
   }

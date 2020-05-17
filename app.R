@@ -44,8 +44,6 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  
-  IDs <- reactiveValues(id1 = NULL, id2= NULL)
 
   get_index1 <- reactive({ which(table$Name == input$pokemon1) })
   get_index2 <- reactive({ which(table$Name == input$pokemon2) })
@@ -76,15 +74,19 @@ server <- function(input, output, session) {
       rownames=FALSE,
       options = list(
         dom='t',
-        pageLength = 13,
+        pageLength = 15,
         rowCallback = JS(rowCallback)
         )
+    ) %>% formatStyle(
+      columns = 2,
+      width='50px',
+      fontSize='12pt'
     ) %>% formatStyle(
       columns = c(1,3),
       width='100px',
       fontSize="11pt",
-      fontWeight = 'bold',
-      )
+      fontWeight = 'bold'
+    )
   )
   
   observeEvent(input$find_match1, {

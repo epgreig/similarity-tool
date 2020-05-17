@@ -15,7 +15,6 @@ Pokedex,Name,Height,Weight,Primary Type,Secondary Type,Male Ratio,Female Ratio,B
 20,Raticate-Alola,0.7,25.5,Dark,Normal,50,50,70,Alola,75,71,70,40,80,77,413,127,Field,
 22,Fearow,1.2,38,Normal,Flying,50,50,70,Kanto,65,90,65,61,61,100,442,90,Flying,
 24,Arbok,3.5,65,Poison,,50,50,70,Kanto,60,95,69,65,79,80,448,90,Field,Dragon
-25,Pikachu-Starter,0.4,6,Electric,,50,50,70,Alola,45,80,50,75,60,120,430,190,Field,Fairy
 26,Raichu,0.8,30,Electric,,50,50,70,Kanto,60,90,55,90,80,110,485,75,Field,Fairy
 26,Raichu-Alola,0.7,21,Electric,Psychic,50,50,70,Alola,60,85,50,95,85,110,485,75,Field,Fairy
 28,Sandslash,1,29.5,Ground,,50,50,70,Kanto,75,100,110,45,55,65,450,90,Field,
@@ -80,7 +79,6 @@ Pokedex,Name,Height,Weight,Primary Type,Secondary Type,Male Ratio,Female Ratio,B
 130,Gyarados-Mega,6.5,305,Water,Dark,50,50,70,Kalos,95,155,109,70,130,81,640,45,Water 2,Dragon
 131,Lapras,2.5,220,Water,Ice,50,50,70,Kanto,130,85,80,85,95,60,535,45,Monster,Water 1
 132,Ditto,0.3,4,Normal,,0,0,70,Kanto,48,48,48,48,48,48,288,35,Ditto,
-133,Eevee-Starter,0.3,6.5,Normal,,87.5,12.5,70,Alola,65,75,70,65,85,75,435,45,Field,
 134,Vaporeon,1,29,Water,,87.5,12.5,70,Kanto,130,65,60,110,95,65,525,45,Field,
 135,Jolteon,0.8,24.5,Electric,,87.5,12.5,70,Kanto,65,65,60,110,95,130,525,45,Field,
 136,Flareon,0.9,25,Fire,,87.5,12.5,70,Kanto,65,130,60,95,110,65,525,45,Field,
@@ -368,7 +366,7 @@ Pokedex,Name,Height,Weight,Primary Type,Secondary Type,Male Ratio,Female Ratio,B
 555,Darmanitan,1.3,92.9,Fire,,50,50,70,Unova,105,140,55,30,55,95,480,60,Field,
 555,Darmanitan-Zen,1.3,92.9,Fire,Psychic,50,50,70,Unova,105,30,105,140,105,55,540,60,Field,
 555,Darmanitan-Galar,1.7,120,Ice,,50,50,70,Galar,105,140,55,30,55,95,480,60,Field,
-555,Darmanitan-Galar Zen,1.7,120,Ice,Fire,50,50,70,Galar,105,160,55,30,55,135,540,60,Field,
+555,Darmanitan-Galar-Zen,1.7,120,Ice,Fire,50,50,70,Galar,105,160,55,30,55,135,540,60,Field,
 556,Maractus,1,28,Grass,,50,50,70,Unova,75,86,67,106,67,60,461,255,Grass,
 558,Crustle,1.4,200,Bug,Rock,50,50,70,Unova,70,105,125,65,75,45,485,75,Bug,Mineral
 560,Scrafty,1.1,30,Dark,Fighting,50,50,70,Unova,65,90,115,45,115,58,488,90,Field,Dragon
