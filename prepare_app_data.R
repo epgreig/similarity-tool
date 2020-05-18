@@ -7,6 +7,9 @@ diag(cosine_scores) <- 1
 
 data <- read.csv('pokemon_data.csv')
 data <- data.table(data)
+# Replace Undiscovered Egg Group with Unknown
+levels(data$Primary.Egg.Group) <- c(levels(data$Primary.Egg.Group), "Unknown")
+data$Primary.Egg.Group[data$Primary.Egg.Group=="Undiscovered"] <- "Unknown"
 
 grid_data <- table[,c("Name")]
 grid_data$Type <- ifelse(data$Secondary.Type=="", paste0(data$Primary.Type), paste0(data$Primary.Type, ", ", data$Secondary.Type))
@@ -16,6 +19,7 @@ grid_data$Defense <- data$Defense
 grid_data$Special.Attack <- data$Special.Attack
 grid_data$Special.Defense <- data$Special.Defense
 grid_data$Speed <- data$Speed
+grid_data$Egg.Group <- ifelse(data$Secondary.Egg.Group=="", paste0(data$Primary.Egg.Group), paste0(data$Primary.Egg.Group, ", ", data$Secondary.Egg.Group))
 grid_data$Height <- data$Height
 grid_data$Weight <- data$Weight
 grid_data$Base.Happiness <- data$Base.Happiness
@@ -26,8 +30,7 @@ grid_data$Catch.Rate <- data$Catch.Rate
 grid_data$Name <- NULL
 grid_data <- as.matrix(grid_data)
 
-grid <- matrix(0, nrow = 13, ncol = 4)
-grid[,1] <- ""
-grid[,3] <- c("Type","Health", "Attack", "Defense", "Sp. Attack",
-              "Sp. Defense", "Speed", "Height (m)", "Weight (kg)",
+grid <- matrix(0, nrow = 14, ncol = 3)
+grid[,2] <- c("Type", "Health", "Attack", "Defense", "Sp. Attack",
+              "Sp. Defense", "Speed", "Egg Group", "Height (m)", "Weight (kg)",
               "Happiness", "Male %", "Female %", "Catch Rate")

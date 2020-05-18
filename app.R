@@ -44,24 +44,26 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  
-  IDs <- reactiveValues(id1 = NULL, id2= NULL)
 
   get_index1 <- reactive({ which(table$Name == input$pokemon1) })
   get_index2 <- reactive({ which(table$Name == input$pokemon2) })
   
   get_grid <- reactive({
-    grid[,2] <- grid_data[get_index1(),]
-    grid[,4] <- grid_data[get_index2(),]
+    grid[,1] <- grid_data[get_index1(),]
+    grid[,3] <- grid_data[get_index2(),]
     grid
   })
 
   output$image1 <- renderImage({
-    list(src = as.character(table[get_index1(), "Image.Name"]))
+    list(src = as.character(table[get_index1(), "Image.Name"]),
+         width="300px",
+         height="300px")
   }, deleteFile=FALSE)
 
   output$image2 <- renderImage({
-    list(src = as.character(table[get_index2(), "Image.Name"]))
+    list(src = as.character(table[get_index2(), "Image.Name"]),
+         width="300px",
+         height="300px")
   }, deleteFile=FALSE)
   
   output$similarity <- renderText({ paste0(100*round(cosine_scores[get_index1(), get_index2()], digits=2), "%") })
@@ -72,14 +74,19 @@ server <- function(input, output, session) {
       rownames=FALSE,
       options = list(
         dom='t',
-        pageLength = 13,
+        pageLength = 15,
         rowCallback = JS(rowCallback)
         )
     ) %>% formatStyle(
-      columns = c(2,4), width='100px',
-      fontSize="12pt",
-      fontWeight = 'bold',
-      )
+      columns = 2,
+      width='50px',
+      fontSize='12pt'
+    ) %>% formatStyle(
+      columns = c(1,3),
+      width='100px',
+      fontSize="11pt",
+      fontWeight = 'bold'
+    )
   )
   
   observeEvent(input$find_match1, {

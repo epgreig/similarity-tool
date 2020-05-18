@@ -16,18 +16,24 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 ## Pokemon Similarity Calculator
 
 #### Eligible Pokemon
-- First 4 Generations of Pokemon Only
+- First 8 Generations of Pokemon Only
 - Fully-Evolved Pokemon Only
-- No Megas/Special Forms
+- No Gigantamax Forms
 #### Features
 - Type(s)
 - Base Stats (Health, Attack, Defense, Sp.Attack, Sp. Defense, Speed)
 - Height and Weight
+- Egg Group
 - Base Happiness
 - Gender Ratio
 - Catch Rate (lower Catch Rate => More difficult to capture)
 
 ## Methodology
+
+#### Data Sources
+- Data: https://www.kaggle.com/mrdew25/pokemon-database
+- Images: https://www.kaggle.com/kvpratama/pokemon-images-dataset (Gen 1-6), https://www.kaggle.com/adityamhatre/pokemon-transparent-images-dataset (Gen 7), https://projectpokemon.org/docs/spriteindex_148/home-sprites-gen-8-r135/ (Gen 8)
+
 
 #### Data Processing
 - One-hot encoding Type data (treating Primary and Secondary Types as equivalent)
