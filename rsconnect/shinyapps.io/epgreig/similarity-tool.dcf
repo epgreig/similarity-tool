@@ -1,0 +1,10 @@
+name: similarity-tool
+title:
+username:
+account: epgreig
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2318052
+bundleId: 3161741
+url: https://epgreig.shinyapps.io/similarity-tool/
+when: 1589806342.4211

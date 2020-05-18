@@ -26,7 +26,7 @@ clrs[num_brks/2+1] <- "rgb(255,255,246)"
 
 rowCallback <- "function(row, data, displayNum, index){"
 
-for(i in 0:ncol(test_data)){
+for(i in c(0,2)){
   rowCallback <- c(
     rowCallback,
     sprintf("var value = data[%d];", i)

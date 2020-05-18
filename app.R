@@ -36,11 +36,13 @@ ui <- fluidPage(
   fluidRow(column(4, align="center",
                   imageOutput(outputId = 'image1')),
            column(4,align="center",
-                  div(dataTableOutput(outputId = 'grid'), style="font-size:120%;text-align:center"),
+                  div(dataTableOutput(outputId = 'grid'), style="text-align:center"),
                   tags$head(tags$style(type = "text/css", "#grid th {display:none;}"))),
            column(4, align="center",
                   imageOutput(outputId = 'image2'))
-  )
+  ),
+  
+  br()
 )
 
 server <- function(input, output, session) {
@@ -71,19 +73,19 @@ server <- function(input, output, session) {
     DT::datatable(
       get_grid(),
       class='cell-border',
-      rownames=FALSE,
       options = list(
         dom='t',
-        pageLength = 15,
-        rowCallback = JS(rowCallback)
+        pageLength = 14,
+        rowCallback = JS(rowCallback),
+        headerCallback = JS(headerCallback)
         )
     ) %>% formatStyle(
       columns = 2,
-      width='50px',
-      fontSize='12pt'
+      width='10px',
+      fontSize='10pt',
     ) %>% formatStyle(
       columns = c(1,3),
-      width='100px',
+      width='60px',
       fontSize="11pt",
       fontWeight = 'bold'
     )
