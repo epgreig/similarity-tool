@@ -6,11 +6,11 @@ source('prepare_app_data.R')
 
 ui <- fluidPage(
   
-  titlePanel(
-    h1("PKMN Similarity Tool", align="center")
-    ),
+  tags$head(HTML("<title>PKMN Similarity Tool</title>")),
   
-  br(),
+  titlePanel(
+    h2("PKMN Similarity Tool", align="center")
+    ),
 
   fluidRow(
     column(4, align="center",
@@ -37,7 +37,8 @@ ui <- fluidPage(
                   imageOutput(outputId = 'image1')),
            column(4,align="center",
                   div(dataTableOutput(outputId = 'grid'), style="text-align:center"),
-                  tags$head(tags$style(type = "text/css", "#grid th {display:none;}"))),
+                  tags$head(tags$style(type = "text/css", "#grid th {display:none;}")),
+                  tags$head(tags$style(type = "text/css", "#grid th {border-width: 5px;}"))),
            column(4, align="center",
                   imageOutput(outputId = 'image2'))
   ),
@@ -72,7 +73,9 @@ server <- function(input, output, session) {
   output$grid <- renderDataTable(
     DT::datatable(
       get_grid(),
-      class='row-border',
+      class='row-border compact',
+      escape=FALSE,
+      callback = JS("$('table.dataTable.no-footer').css('border-bottom', 'none');"),
       options = list(
         dom='t',
         pageLength = 14,
@@ -80,11 +83,11 @@ server <- function(input, output, session) {
         )
     ) %>% formatStyle(
       columns = 2,
-      width='10px',
-      fontSize='10pt'
+      width='50px',
+      fontSize='9pt'
     ) %>% formatStyle(
       columns = c(1,3),
-      width='60px',
+      width='55px',
       fontSize="11pt",
       fontWeight = 'bold'
     )

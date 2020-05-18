@@ -9,7 +9,7 @@ The link above is to the web app hosted on shinyapps.io (free account, 25 hours 
 
 I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbers: Finding the NHL's most unique players" (https://theathletic.com/1761077/2020/04/21/by-the-numbers-finding-the-nhls-most-unique-players/). In this article, he calculated similarity scores between all NHL players using age, size, and various usage stats to represent offensive and defensive prowess. He defined the most unique players to the the ones who that the lowest similarity score with their respective closest match. These players were:
 
-- John Carlsen (one-dimensional, elite offensive production)
+- John Carlson (one-dimensional, elite offensive production)
 - Zdeno Chara (tall, 42, and still effective)  
 - Alex Ovechkin (true-talent 50-goal scorer – at any age)
 
@@ -40,7 +40,7 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 - One-hot encoding Type data (treating Primary and Secondary Types as equivalent)
 - One-hot encoding Egg Group data (treating Primary and Secondary Egg Groups as equivalent)
 - One-hot encoding Gender ratios into three binary variables: Male/Female Dominant (if gender ratio skews toward one or the other) or Genderless
-- Standardize all features: centering on the <ins>median</ins>, and with standard deviation of 1 for the six stat features and 0.5 for the remaining features (I want to weigh the Base Stats of the pokemon more than anything else for similarity)
+- Standardize all features: centering on the <ins>median</ins>, and with standard deviation of 1 for the six Stat features, 0.5 for the Type and Egg Group features, and 0.25 for the remaining features (I want to weigh the Base Stats of the pokemon more than anything else for similarity)
 - Note: the one-hot encoded Type features were scaled together so that the rarity of a type was not considered in similarity (e.g. Fairy is more rare than Water but I want to consider them equally dissimilar from any other type). This was also done for Egg Groups.
 - Similarity between 2 pkmn: Cosine of the angle between their corresponding 45-dimensional vectors
 

@@ -12,14 +12,14 @@ levels(data$Primary.Egg.Group) <- c(levels(data$Primary.Egg.Group), "Unknown")
 data$Primary.Egg.Group[data$Primary.Egg.Group=="Undiscovered"] <- "Unknown"
 
 grid_data <- table[,c("Name")]
-grid_data$Type <- ifelse(data$Secondary.Type=="", paste0(data$Primary.Type), paste0(data$Primary.Type, ", ", data$Secondary.Type))
+grid_data$Type <- ifelse(data$Secondary.Type=="", paste0(data$Primary.Type), paste0(data$Primary.Type, ",<br/>", data$Secondary.Type))
 grid_data$Health <- data$Health
 grid_data$Attack <- data$Attack
 grid_data$Defense <- data$Defense
 grid_data$Special.Attack <- data$Special.Attack
 grid_data$Special.Defense <- data$Special.Defense
 grid_data$Speed <- data$Speed
-grid_data$Egg.Group <- ifelse(data$Secondary.Egg.Group=="", paste0(data$Primary.Egg.Group), paste0(data$Primary.Egg.Group, ", ", data$Secondary.Egg.Group))
+grid_data$Egg.Group <- ifelse(data$Secondary.Egg.Group=="", paste0(data$Primary.Egg.Group), paste0(data$Primary.Egg.Group, ",<br/>", data$Secondary.Egg.Group))
 grid_data$Height <- data$Height
 grid_data$Weight <- data$Weight
 grid_data$Base.Happiness <- data$Base.Happiness

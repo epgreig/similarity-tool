@@ -71,9 +71,10 @@ table_numeric <- table_scaled[, -non_scaling_columns, with=FALSE]
 table_numeric <- table_numeric[, c(features_size, features_stats, features_types, features_egg_groups, features_gender, features_misc), with=FALSE]
 
 # Scale down less important categories
-features_scale_down <- c(features_size, features_types, features_egg_groups, features_gender, features_misc)
-table_numeric[, features_scale_down] <- table_numeric[, features_scale_down, with=FALSE] / 2
-#table_numeric[, features_types] <- table_numeric[, features_types, with=FALSE] / 
+features_categorical <- c(features_types, features_egg_groups)
+table_numeric[, features_categorical] <- table_numeric[, features_categorical, with=FALSE] / 2
+features_scale_down <- c(features_size, features_gender, features_misc)
+table_numeric[, features_scale_down] <- table_numeric[, features_scale_down, with=FALSE] / 4
 
 distances <- as.matrix(dist(table_numeric, method = "manhattan", upper=TRUE))
 # Calculate Scores and Most Similar
