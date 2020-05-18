@@ -72,17 +72,16 @@ server <- function(input, output, session) {
   output$grid <- renderDataTable(
     DT::datatable(
       get_grid(),
-      class='cell-border',
+      class='row-border',
       options = list(
         dom='t',
         pageLength = 14,
-        rowCallback = JS(rowCallback),
-        headerCallback = JS(headerCallback)
+        rowCallback = JS(rowCallback)
         )
     ) %>% formatStyle(
       columns = 2,
       width='10px',
-      fontSize='10pt',
+      fontSize='10pt'
     ) %>% formatStyle(
       columns = c(1,3),
       width='60px',

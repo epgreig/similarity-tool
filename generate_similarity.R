@@ -50,13 +50,6 @@ table$Egg.Group_Undiscovered <- NULL
 table$Base.Stat.Total <- NULL
 combined_egg_cols <- combined_egg_cols[combined_egg_cols != "Egg.Group_Undiscovered"]
 
-# Identify non-numeric fields
-non_scaling_columns <- c("Name","Pokedex","Region.of.Origin")
-table_scaled <- cbind(table[, non_scaling_columns, with=FALSE], scale(table[, -non_scaling_columns, with=FALSE], center=apply(table[, -non_scaling_columns, with=FALSE], 2, median)))
-table_numeric <- table_scaled[, -non_scaling_columns, with=FALSE]
-
-# scale(table[, -non_scaling_columns, with=FALSE], center=apply(table[, -non_scaling_columns, with=FALSE],2,median))
-
 # Define similarity feature groupings
 features_size <- c("Height", "Weight")
 features_stats <- c("Health.Stat", "Attack.Stat", "Defense.Stat", "Special.Attack.Stat", "Special.Defense.Stat", "Speed.Stat")
@@ -65,22 +58,28 @@ features_egg_groups <- combined_egg_cols
 features_gender <- c("Male.Dominant", "Female.Dominant", "Genderless")
 features_misc <- c("Base.Happiness", "Catch.Rate")
 
+# Center and Scale
+non_scaling_columns <- c("Name","Pokedex","Region.of.Origin")
+medians <- apply(table[, -non_scaling_columns, with=FALSE], 2, median)
+std_devs <- apply(table[, -non_scaling_columns, with=FALSE], 2, sd)
+std_devs[features_types] <- sd(as.matrix(table[, features_types, with=FALSE]))
+std_devs[features_egg_groups] <- sd(as.matrix(table[, features_egg_groups, with=FALSE]))
+
+table_scaled <- cbind(table[, non_scaling_columns, with=FALSE], scale(table[, -non_scaling_columns, with=FALSE], center=medians, scale=std_devs))
+table_numeric <- table_scaled[, -non_scaling_columns, with=FALSE]
+
 table_numeric <- table_numeric[, c(features_size, features_stats, features_types, features_egg_groups, features_gender, features_misc), with=FALSE]
 
 # Scale down less important categories
 features_scale_down <- c(features_size, features_types, features_egg_groups, features_gender, features_misc)
 table_numeric[, features_scale_down] <- table_numeric[, features_scale_down, with=FALSE] / 2
+#table_numeric[, features_types] <- table_numeric[, features_types, with=FALSE] / 
 
 distances <- as.matrix(dist(table_numeric, method = "manhattan", upper=TRUE))
 # Calculate Scores and Most Similar
 sim <- table_numeric / sqrt(rowSums(table_numeric * table_numeric))
 cosine_scores <- as.matrix(sim) %*% t(as.matrix(sim))
 diag(cosine_scores) <- rowMeans(cosine_scores)
-
-table_numeric_positive <- sweep(table_numeric,2, apply(table_numeric,2,min))
-sim <- table_numeric_positive / sqrt(rowSums(table_numeric_positive * table_numeric_positive))
-cosine_scores_positive <- as.matrix(sim) %*% t(as.matrix(sim))
-diag(cosine_scores_positive) <- rowMeans(cosine_scores_positive)
 
 most_similar <- max.col(cosine_scores)
 most_dissimilar <- max.col(-cosine_scores)

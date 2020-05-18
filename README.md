@@ -16,9 +16,11 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 ## Pokemon Similarity Calculator
 
 #### Eligible Pokemon
-- First 8 Generations of Pokemon Only
+- First 8 Generations of Pokemon
 - Fully-Evolved Pokemon Only
+- Includes Megas and most alternate forms
 - No Gigantamax Forms
+
 #### Features
 - Type(s)
 - Base Stats (Health, Attack, Defense, Sp.Attack, Sp. Defense, Speed)
@@ -34,12 +36,13 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 - Data: https://www.kaggle.com/mrdew25/pokemon-database
 - Images: https://www.kaggle.com/kvpratama/pokemon-images-dataset (Gen 1-6), https://www.kaggle.com/adityamhatre/pokemon-transparent-images-dataset (Gen 7), https://projectpokemon.org/docs/spriteindex_148/home-sprites-gen-8-r135/ (Gen 8)
 
-
 #### Data Processing
 - One-hot encoding Type data (treating Primary and Secondary Types as equivalent)
+- One-hot encoding Egg Group data (treating Primary and Secondary Egg Groups as equivalent)
 - One-hot encoding Gender ratios into three binary variables: Male/Female Dominant (if gender ratio skews toward one or the other) or Genderless
-- Standardize all data (average of 0, variance of 1)
-- Similarity between 2 pkmn: Cosine of the angle between their corresponding 29-dimensional vectors
+- Standardize all features: centering on the <ins>median</ins>, and with standard deviation of 1 for the six stat features and 0.5 for the remaining features (I want to weigh the Base Stats of the pokemon more than anything else for similarity)
+- Note: the one-hot encoded Type features were scaled together so that the rarity of a type was not considered in similarity (e.g. Fairy is more rare than Water but I want to consider them equally dissimilar from any other type). This was also done for Egg Groups.
+- Similarity between 2 pkmn: Cosine of the angle between their corresponding 45-dimensional vectors
 
 #### Reasons for using Cosine similarity
 - Robust to extreme features (e.g. some Pokemon had features with z-scores as high as 9, and these features skewed distance metrics like Euclidean or Manhattan Distance)
