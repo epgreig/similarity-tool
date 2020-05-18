@@ -88,7 +88,6 @@ server <- function(input, output, session) {
     ) %>% formatStyle(
       columns = c(1,3),
       width='55px',
-      fontSize="11pt",
       fontWeight = 'bold'
     )
   )

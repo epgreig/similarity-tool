@@ -41,14 +41,19 @@ for(i in c(0,1,2)){
     rowCallback <- c(
       rowCallback,
       sprintf("if(index === %d){", j-1),
-      if (j != nrow(test_data))
+      if (j %in% c(1,8))
       {
-        sprintf("$('td:eq(%d)',row).css('border-top', '1px solid Gainsboro').css('background-color', %s).css('font-size', '500px !important');", 
+        sprintf("$('td:eq(%d)',row).css('border-top', '1px solid Gainsboro').css('background-color', %s).css('font-size', '10pt');", 
+                i, styleInterval(brks[,j], clrs))
+      }
+      else if (j != nrow(test_data))
+      {
+        sprintf("$('td:eq(%d)',row).css('border-top', '1px solid Gainsboro').css('background-color', %s).css('font-size', '11pt');", 
                 i, styleInterval(brks[,j], clrs))
       }
       else
       {
-        sprintf("$('td:eq(%d)',row).css('border-top', '1px solid Gainsboro').css('border-bottom', '1px solid Gainsboro').css('background-color', %s).css('font-size', '500px !important');", 
+        sprintf("$('td:eq(%d)',row).css('border-top', '1px solid Gainsboro').css('border-bottom', '1px solid Gainsboro').css('background-color', %s).css('font-size', '11pt');", 
                 i, styleInterval(brks[,j], clrs))
       },
       "}"
