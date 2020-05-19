@@ -8,8 +8,12 @@ ui <- fluidPage(
   
   tags$head(HTML("<title>PKMN Similarity Tool</title>")),
   
-  titlePanel(
-    h2("PKMN Similarity Tool", align="center")
+  fluidRow(
+    column(3),
+    column(6,
+           titlePanel(h2("PKMN Similarity Tool", align="center"))),
+    column(3, align="right",
+           checkboxInput("scale_images", "Scale Images by Height", value = FALSE, width = NULL))
     ),
 
   fluidRow(
@@ -62,11 +66,11 @@ server <- function(input, output, session) {
   })
   
   padding1 <- reactive({
-    if (ratio() >= 1) { 0 }
+    if (ratio() >= 1 | input$scale_images == FALSE) { 0 }
     else { min(300*(1 - ratio()), 270) }
   })
   padding2 <- reactive({
-    if (ratio() <= 1) { 0 }
+    if (ratio() <= 1 | input$scale_images == FALSE) { 0 }
     else { min(300*(1 - 1/ratio()), 270) }
   })
 
