@@ -57,19 +57,41 @@ server <- function(input, output, session) {
     grid
   })
 
+  ratio <- reactive({
+    as.numeric(grid_data[get_index1(),"Height"]) / as.numeric(grid_data[get_index2(),"Height"])
+  })
+  
+  padding1 <- reactive({
+    if (ratio() >= 1) { 0 }
+    else { min(300*(1 - ratio()), 270) }
+  })
+  padding2 <- reactive({
+    if (ratio() <= 1) { 0 }
+    else { min(300*(1 - 1/ratio()), 270) }
+  })
+
   output$image1 <- renderImage({
     list(src = as.character(table[get_index1(), "Image.Name"]),
          width="300px",
-         height="300px")
+         height="300px",
+         style=paste0(
+           "padding-top:", padding1(), "px;",
+           "padding-left:", padding1()/2, "px;",
+           "padding-right:", padding1()/2, "px;"))
   }, deleteFile=FALSE)
 
   output$image2 <- renderImage({
     list(src = as.character(table[get_index2(), "Image.Name"]),
          width="300px",
-         height="300px")
+         height="300px",
+         style=paste0(
+           "padding-top:", padding2(), "px;",
+           "padding-left:", padding2()/2, "px;",
+           "padding-right:", padding2()/2, "px;"))
   }, deleteFile=FALSE)
   
   output$similarity <- renderText({ paste0(100*round(cosine_scores[get_index1(), get_index2()], digits=2), "%") })
+  
   output$grid <- renderDataTable(
     DT::datatable(
       get_grid(),
