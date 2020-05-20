@@ -119,19 +119,33 @@ server <- function(input, output, session) {
   )
   
   observeEvent(input$find_match1, {
-    updateTextInput(session, 'pokemon2', value=table$Name[table$most_similar[get_index1()]])
+    match_id <- table$V1[get_index1()]
+    if (match_id == get_index1()) {
+      match_id <- table$V2[get_index1()]
+    }
+
+    updateTextInput(session, 'pokemon2', value=table$Name[match_id])
   })
   
   observeEvent(input$find_match2, {
-    updateTextInput(session, 'pokemon1', value=table$Name[table$most_similar[get_index2()]])
+    match_id <- table$V1[get_index2()]
+    if (match_id == get_index2()) {
+      match_id <- table$V2[get_index2()]
+    }
+
+    updateTextInput(session, 'pokemon1', value=table$Name[match_id])
   })
   
+  mismatch_column <- paste0("V", nrow(table))
+
   observeEvent(input$find_mismatch1, {
-    updateTextInput(session, 'pokemon2', value=table$Name[table$most_dissimilar[get_index1()]])
+    mismatch_id <- as.numeric(table[get_index1(), mismatch_column, with=FALSE])
+    updateTextInput(session, 'pokemon2', value=table$Name[mismatch_id])
   })
   
   observeEvent(input$find_mismatch2, {
-    updateTextInput(session, 'pokemon1', value=table$Name[table$most_dissimilar[get_index2()]])
+    mismatch_id <- as.numeric(table[get_index2(), mismatch_column, with=FALSE])
+    updateTextInput(session, 'pokemon1', value=table$Name[mismatch_id])
   })
 }
 

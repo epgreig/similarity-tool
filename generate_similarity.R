@@ -80,10 +80,6 @@ distances <- as.matrix(dist(table_numeric, method = "manhattan", upper=TRUE))
 # Calculate Scores and Most Similar
 sim <- table_numeric / sqrt(rowSums(table_numeric * table_numeric))
 cosine_scores <- as.matrix(sim) %*% t(as.matrix(sim))
-diag(cosine_scores) <- rowMeans(cosine_scores)
-
-most_similar <- max.col(cosine_scores)
-most_dissimilar <- max.col(-cosine_scores)
 
 # Get Image Names
 get_image_name <- function(pokedex, name) {
@@ -94,8 +90,8 @@ get_image_name <- function(pokedex, name) {
 
 table$Image.Name <- get_image_name(table$Pokedex, table$Name)
 
-# Combine into one table
-table_with_scores <- cbind(table, most_similar, most_dissimilar)
+# Attach full similarity rankings for each row
+table_with_scores <- cbind(table, t(apply(cosine_scores, 1, order, decreasing=TRUE)))
 
 # for (filename in table$Image.Name)
 #   file.copy(paste0("images/", filename), "images_temp")
@@ -103,3 +99,4 @@ table_with_scores <- cbind(table, most_similar, most_dissimilar)
 #for (filename in table$Image.Name) {
 #    file.copy(filename, "images_temp")
 # }
+
