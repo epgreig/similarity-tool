@@ -67,11 +67,11 @@ server <- function(input, output, session) {
   
   padding1 <- reactive({
     if (ratio() >= 1 | input$scale_images == FALSE) { 0 }
-    else { min(300*(1 - ratio()), 270) }
+    else { 300*(1 - ratio()) }
   })
   padding2 <- reactive({
     if (ratio() <= 1 | input$scale_images == FALSE) { 0 }
-    else { min(300*(1 - 1/ratio()), 270) }
+    else { 300*(1 - 1/ratio()) }
   })
 
   output$image1 <- renderImage({
