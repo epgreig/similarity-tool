@@ -55,11 +55,7 @@ server <- function(input, output, session) {
   get_index1 <- reactive({ which(table$Name == input$pokemon1) })
   get_index2 <- reactive({ which(table$Name == input$pokemon2) })
   
-  get_grid <- reactive({
-    grid[,1] <- grid_data[get_index1(),]
-    grid[,3] <- grid_data[get_index2(),]
-    grid
-  })
+  output$similarity <- renderText({ paste0(100*round(cosine_scores[get_index1(), get_index2()], digits=2), "%") })
 
   ratio <- reactive({
     as.numeric(grid_data[get_index1(),"Height"]) / as.numeric(grid_data[get_index2(),"Height"])
@@ -94,8 +90,12 @@ server <- function(input, output, session) {
            "padding-right:", padding2()/2, "px;"))
   }, deleteFile=FALSE)
   
-  output$similarity <- renderText({ paste0(100*round(cosine_scores[get_index1(), get_index2()], digits=2), "%") })
-  
+  get_grid <- reactive({
+    grid[,1] <- grid_data[get_index1(),]
+    grid[,3] <- grid_data[get_index2(),]
+    grid
+  })
+
   output$grid <- renderDataTable(
     DT::datatable(
       get_grid(),
