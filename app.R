@@ -25,15 +25,17 @@ ui <- fluidPage(
            selectizeInput("pokemon2", "Pokemon 2:", table$Name, selected="Blastoise"))
   ),
   fluidRow(
-    column(2, align="center",
-           actionButton("find_match1", "Find Most Similar")),
-    column(2, align="center",
-           actionButton("find_mismatch1", "Find Most Different")),
+    column(4, align="center",
+           actionButton("find_match1", "Most Similar"),
+           actionButton("find_next_similar1", "<"),
+           actionButton("find_next_different1", ">"),
+           actionButton("find_mismatch1", "Most Different")),
     column(4),
-    column(2, align="center",
-           actionButton("find_match2", "Find Most Similar")),
-    column(2, align="center",
-           actionButton("find_mismatch2", "Find Most Different"))
+    column(4, align="center",
+           actionButton("find_match2", "Most Similar"),
+           actionButton("find_next_similar2", "<"),
+           actionButton("find_next_different2", ">"),
+           actionButton("find_mismatch2", "Most Different"))
   ),
   br(),
   
