@@ -21,37 +21,37 @@ ui <- fluidPage(
     column(4, align="center",
            selectizeInput("pokemon1", "PKMN 1:", table$Name, selected="Charizard")),
     column(1, style='padding:2px',
-           actionButton("find_match1",
+           actionButton("most_similar1",
                         "", icon=icon("angle-double-up"), width='100%',
                         style='font-size:9pt; padding:2px; margin:0px; color:white; background-color:rgb(51,122,183); border-color:white'),
            br(),
-           actionButton("find_match1",
+           actionButton("next_similar1",
                         "", icon=icon("angle-up"), width='100%',
                         style='font-size:9pt; padding:0px; margin-top:-4px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
            br(),
-           actionButton("find_mismatch1",
+           actionButton("next_dissimilar1",
                         "", icon=icon("angle-down"), width='100%',
                         style='font-size:9pt; padding:0px; margin-top:-6px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
            br(),
-           actionButton("find_mismatch1",
+           actionButton("most_dissimilar1",
                         "", icon=icon("angle-double-down"), width='100%',
                         style='font-size:9pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white')),
     column(2,
            h1(textOutput(outputId = 'similarity'), align="center")),
     column(1, style='padding:2px',
-           actionButton("find_match2",
+           actionButton("most_similar2",
                         "", icon=icon("angle-double-up"), width='100%',
                         style='font-size:9pt; padding:2px; margin:0px; color:white; background-color:rgb(51,122,183); border-color:white'),
            br(),
-           actionButton("find_match2",
+           actionButton("next_similar2",
                         "", icon=icon("angle-up"), width='100%',
                         style='font-size:9pt; padding:0px; margin-top:-4px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
            br(),
-           actionButton("find_mismatch2",
+           actionButton("next_dissimilar2",
                         "", icon=icon("angle-down"), width='100%',
                         style='font-size:9pt; padding:0px; margin-top:-6px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
            br(),
-           actionButton("find_mismatch2",
+           actionButton("most_dissimilar2",
                         "", icon=icon("angle-double-down"), width='100%',
                         style='font-size:9pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white')),
     column(4, align="center",
@@ -78,6 +78,8 @@ server <- function(input, output, session) {
   get_index2 <- reactive({ which(table$Name == input$pokemon2) })
   
   output$similarity <- renderText({ paste0(100*round(cosine_scores[get_index1(), get_index2()], digits=2), "%") })
+
+  # Images
 
   ratio <- reactive({
     as.numeric(grid_data[get_index1(),"Height"]) / as.numeric(grid_data[get_index2(),"Height"])
@@ -112,6 +114,8 @@ server <- function(input, output, session) {
            "padding-right:", padding2()/2, "px;"))
   }, deleteFile=FALSE)
   
+  # Grid
+  
   get_grid <- reactive({
     grid[,1] <- grid_data[get_index1(),]
     grid[,3] <- grid_data[get_index2(),]
@@ -140,33 +144,66 @@ server <- function(input, output, session) {
     )
   )
   
-  observeEvent(input$find_match1, {
+  # Buttons
+  
+  V_columns <- paste0("V",1:nrow(table))
+  mismatch_column <- V_columns[nrow(table)]
+  
+  observeEvent(input$most_similar1, {
     match_id <- table$V1[get_index1()]
     if (match_id == get_index1()) {
       match_id <- table$V2[get_index1()]
     }
-
     updateTextInput(session, 'pokemon2', value=table$Name[match_id])
   })
   
-  observeEvent(input$find_match2, {
+  observeEvent(input$next_similar1, {
+    current_rank <- match(get_index2(),table[get_index1(),V_columns,with=FALSE])
+    next_rank <- max(current_rank-1, 1)
+    V_next_rank <- paste0("V", next_rank)
+    next_similar_id <- as.numeric(table[get_index1(),V_next_rank,with=FALSE])
+    updateTextInput(session, 'pokemon2', value=table$Name[next_similar_id])
+  })
+  
+  observeEvent(input$next_dissimilar1, {
+    current_rank <- match(get_index2(),table[get_index1(),V_columns,with=FALSE])
+    next_rank <- min(current_rank+1, nrow(table))
+    V_next_rank <- paste0("V", next_rank)
+    next_dissimilar_id <- as.numeric(table[get_index1(),V_next_rank,with=FALSE])
+    updateTextInput(session, 'pokemon2', value=table$Name[next_dissimilar_id])
+  })
+  
+  observeEvent(input$most_dissimilar1, {
+    mismatch_id <- as.numeric(table[get_index1(), mismatch_column,with=FALSE])
+    updateTextInput(session, 'pokemon2', value=table$Name[mismatch_id])
+  })
+  
+  observeEvent(input$most_similar2, {
     match_id <- table$V1[get_index2()]
     if (match_id == get_index2()) {
       match_id <- table$V2[get_index2()]
     }
-
     updateTextInput(session, 'pokemon1', value=table$Name[match_id])
   })
   
-  mismatch_column <- paste0("V", nrow(table))
-
-  observeEvent(input$find_mismatch1, {
-    mismatch_id <- as.numeric(table[get_index1(), mismatch_column, with=FALSE])
-    updateTextInput(session, 'pokemon2', value=table$Name[mismatch_id])
+  observeEvent(input$next_similar2, {
+    current_rank <- match(get_index1(),table[get_index2(),V_columns,with=FALSE])
+    next_rank <- max(current_rank-1, 1)
+    V_next_rank <- paste0("V", next_rank)
+    next_similar_id <- as.numeric(table[get_index2(),V_next_rank,with=FALSE])
+    updateTextInput(session, 'pokemon1', value=table$Name[next_similar_id])
   })
   
-  observeEvent(input$find_mismatch2, {
-    mismatch_id <- as.numeric(table[get_index2(), mismatch_column, with=FALSE])
+  observeEvent(input$next_dissimilar2, {
+    current_rank <- match(get_index1(),table[get_index2(),V_columns,with=FALSE])
+    next_rank <- min(current_rank+1, nrow(table))
+    V_next_rank <- paste0("V", next_rank)
+    next_dissimilar_id <- as.numeric(table[get_index2(),V_next_rank,with=FALSE])
+    updateTextInput(session, 'pokemon1', value=table$Name[next_dissimilar_id])
+  })
+  
+  observeEvent(input$most_dissimilar2, {
+    mismatch_id <- as.numeric(table[get_index2(), mismatch_column,with=FALSE])
     updateTextInput(session, 'pokemon1', value=table$Name[mismatch_id])
   })
 }
