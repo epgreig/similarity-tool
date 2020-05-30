@@ -60,21 +60,24 @@ features_misc <- c("Base.Happiness", "Catch.Rate")
 
 # Center and Scale
 non_scaling_columns <- c("Name","Pokedex","Region.of.Origin")
-medians <- apply(table[, -non_scaling_columns, with=FALSE], 2, median)
+centers <- apply(table[, -non_scaling_columns, with=FALSE], 2, median)
+#centers[c(features_types, features_egg_groups)] <- apply(table[, c(features_types, features_egg_groups), with=FALSE], 2, mean)
 std_devs <- apply(table[, -non_scaling_columns, with=FALSE], 2, sd)
 std_devs[features_types] <- sd(as.matrix(table[, features_types, with=FALSE]))
 std_devs[features_egg_groups] <- sd(as.matrix(table[, features_egg_groups, with=FALSE]))
 
-table_scaled <- cbind(table[, non_scaling_columns, with=FALSE], scale(table[, -non_scaling_columns, with=FALSE], center=medians, scale=std_devs))
+table_scaled <- scale(table[, -non_scaling_columns, with=FALSE], center=centers, scale=std_devs)
+table_scaled <- cbind(table[, non_scaling_columns, with=FALSE], table_scaled)
 table_numeric <- table_scaled[, -non_scaling_columns, with=FALSE]
 
 table_numeric <- table_numeric[, c(features_size, features_stats, features_types, features_egg_groups, features_gender, features_misc), with=FALSE]
 
 # Scale down less important categories
 features_categorical <- c(features_types, features_egg_groups)
-table_numeric[, features_categorical] <- table_numeric[, features_categorical, with=FALSE] / 2
+table_numeric[, features_categorical] <- table_numeric[, features_categorical, with=FALSE] / 3
 features_scale_down <- c(features_size, features_gender, features_misc)
-table_numeric[, features_scale_down] <- table_numeric[, features_scale_down, with=FALSE] / 4
+table_numeric[, features_scale_down] <- table_numeric[, features_scale_down, with=FALSE] / 3
+table_numeric <- cbind(table_numeric, 1)
 
 distances <- as.matrix(dist(table_numeric, method = "manhattan", upper=TRUE))
 # Calculate Scores and Most Similar
