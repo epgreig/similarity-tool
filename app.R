@@ -20,7 +20,10 @@ ui <- fluidPage(
 
   fluidRow(
     column(4, align="center",
-           selectizeInput("pokemon1", "PKMN 1:", table$Name, selected="Charizard")),
+           selectizeInput("pokemon1", "PKMN 1:", table$Name, selected="Charizard"),
+           actionButton("randomize1", "", icon=icon("random"), 
+                        style='font-size:9pt; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; margin-top:-18px; color:white; background-color:rgb(51,183,122); border-color:white'),
+           bsTooltip("randomize1", "Randomize")),
     column(1, style='padding:2px',
            actionButton("most_similar1",
                         "", icon=icon("angle-double-up"), width='100%',
@@ -66,7 +69,10 @@ ui <- fluidPage(
            bsTooltip("most_dissimilar2", "Find Least Similar", placement = "right")
     ),
     column(4, align="center",
-           selectizeInput("pokemon2", "PKMN 2:", table$Name, selected="Blastoise"))
+           selectizeInput("pokemon2", "PKMN 2:", table$Name, selected="Blastoise"),
+           actionButton("randomize2", "", icon=icon("random"), 
+                        style='font-size:9pt; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; margin-top:-18px; color:white; background-color:rgb(51,183,122); border-color:white'),
+           bsTooltip("randomize2", "Randomize"))
   ),
   br(),
   
@@ -78,7 +84,7 @@ ui <- fluidPage(
                   tags$head(tags$style(type = "text/css", "#grid th {border-width: 5px;}"))),
            column(4, align="center",
                   imageOutput(outputId = 'image2'))
-  ),
+  )
   
 )
 
@@ -155,6 +161,16 @@ server <- function(input, output, session) {
   )
   
   # Buttons
+  
+  observeEvent(input$randomize1, {
+    random_pkmn <- sample(table$Name, 1)
+    updateTextInput(session, 'pokemon1', value=random_pkmn)
+  })
+  
+  observeEvent(input$randomize2, {
+    random_pkmn <- sample(table$Name, 1)
+    updateTextInput(session, 'pokemon2', value=random_pkmn)
+  })
   
   V_columns <- paste0("V",1:nrow(table))
   mismatch_column <- V_columns[nrow(table)]
