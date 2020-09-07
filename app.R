@@ -1,4 +1,5 @@
 library('shiny')
+library('shinyBS')
 library('DT')
 
 source('conditional_formatting.R')
@@ -19,43 +20,57 @@ ui <- fluidPage(
 
   fluidRow(
     column(4, align="center",
-           selectizeInput("pokemon1", "PKMN 1:", table$Name, selected="Charizard")),
+           selectizeInput("pokemon1", "PKMN 1:", table$Name, selected="Charizard"),
+           actionButton("randomize1", "", icon=icon("random"), 
+                        style='font-size:9pt; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; margin-top:-18px; color:white; background-color:rgb(51,183,122); border-color:white'),
+           bsTooltip("randomize1", "Randomize")),
     column(1, style='padding:2px',
            actionButton("most_similar1",
                         "", icon=icon("angle-double-up"), width='100%',
                         style='font-size:10pt; padding:2px; margin:0px; color:white; background-color:rgb(51,122,183); border-color:white'),
+           bsTooltip("most_similar1", "Find Most Similar", placement = "left"),
            br(),
            actionButton("next_similar1",
                         "", icon=icon("angle-up"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-4px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
+           bsTooltip("next_similar1", "Find More Similar", placement = "left"),
            br(),
            actionButton("next_dissimilar1",
                         "", icon=icon("angle-down"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-6px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
+           bsTooltip("next_dissimilar1", "Find Less Similar", placement = "left"),
            br(),
            actionButton("most_dissimilar1",
                         "", icon=icon("angle-double-down"), width='100%',
-                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white')),
+                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white'),
+           bsTooltip("most_dissimilar1", "Find Least Similar", placement = "left")),
     column(2,
            h1(textOutput(outputId = 'similarity'), align="center")),
     column(1, style='padding:2px',
            actionButton("most_similar2",
                         "", icon=icon("angle-double-up"), width='100%',
                         style='font-size:10pt; padding:2px; margin:0px; color:white; background-color:rgb(51,122,183); border-color:white'),
+           bsTooltip("most_similar2", "Find Most Similar", placement = "right"),
            br(),
            actionButton("next_similar2",
                         "", icon=icon("angle-up"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-4px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
+           bsTooltip("next_similar2", "Find More Similar", placement = "right"),
            br(),
            actionButton("next_dissimilar2",
                         "", icon=icon("angle-down"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-6px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
+           bsTooltip("next_dissimilar2", "Find Less Similar", placement = "right"),
            br(),
            actionButton("most_dissimilar2",
                         "", icon=icon("angle-double-down"), width='100%',
-                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white')),
+                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white'),
+           bsTooltip("most_dissimilar2", "Find Least Similar", placement = "right")),
     column(4, align="center",
-           selectizeInput("pokemon2", "PKMN 2:", table$Name, selected="Blastoise"))
+           selectizeInput("pokemon2", "PKMN 2:", table$Name, selected="Blastoise"),
+           actionButton("randomize2", "", icon=icon("random"), 
+                        style='font-size:9pt; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; margin-top:-18px; color:white; background-color:rgb(51,183,122); border-color:white'),
+           bsTooltip("randomize2", "Randomize"))
   ),
   br(),
   
@@ -67,15 +82,21 @@ ui <- fluidPage(
                   tags$head(tags$style(type = "text/css", "#grid th {border-width: 5px;}"))),
            column(4, align="center",
                   imageOutput(outputId = 'image2'))
-  ),
+  )
   
-  br()
 )
 
 server <- function(input, output, session) {
 
-  get_index1 <- reactive({ which(table$Name == input$pokemon1) })
-  get_index2 <- reactive({ which(table$Name == input$pokemon2) })
+  get_index1 <- reactive({
+    id <- which(table$Name == input$pokemon1)
+    if (length(id) == 0) { id <- 3 }
+    return(id)
+    })
+  get_index2 <- reactive({
+    id <- which(table$Name == input$pokemon2)
+    if (length(id) == 0) { id <- 6 }
+    return(id)})
   
   output$similarity <- renderText({ paste0(100*round(cosine_scores[get_index1(), get_index2()], digits=2), "%") })
 
@@ -145,6 +166,16 @@ server <- function(input, output, session) {
   )
   
   # Buttons
+  
+  observeEvent(input$randomize1, {
+    random_pkmn <- sample(table$Name, 1)
+    updateTextInput(session, 'pokemon1', value=random_pkmn)
+  })
+  
+  observeEvent(input$randomize2, {
+    random_pkmn <- sample(table$Name, 1)
+    updateTextInput(session, 'pokemon2', value=random_pkmn)
+  })
   
   V_columns <- paste0("V",1:nrow(table))
   mismatch_column <- V_columns[nrow(table)]

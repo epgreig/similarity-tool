@@ -491,7 +491,6 @@ Pokedex,Name,Height,Weight,Primary Type,Secondary Type,Male Ratio,Female Ratio,B
 745,Lycanroc,0.8,25,Rock,,50,50,70,Alola,75,115,65,55,65,112,487,90,Field,
 745,Lycanroc-Midnight,1.1,25,Rock,,50,50,70,Alola,85,115,75,55,75,82,487,90,Field,
 745,Lycanroc-Dusk,0.8,25,Rock,,50,50,70,Alola,75,117,65,55,65,110,487,90,Field,
-746,Wishiwashi,0.2,0.3,Water,,50,50,70,Alola,45,20,20,25,25,40,175,60,Water 2,
 746,Wishiwashi-School,8.2,78.6,Water,,50,50,70,Alola,45,140,130,140,135,30,620,60,Water 2,
 748,Toxapex,0.7,14.5,Poison,Water,50,50,70,Alola,50,63,152,53,142,35,495,75,Water 1,
 750,Mudsdale,2.5,920,Ground,,50,50,70,Alola,100,125,100,55,85,35,500,60,Field,
