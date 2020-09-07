@@ -43,8 +43,7 @@ ui <- fluidPage(
            actionButton("most_dissimilar1",
                         "", icon=icon("angle-double-down"), width='100%',
                         style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white'),
-           bsTooltip("most_dissimilar1", "Find Least Similar", placement = "left")
-    ),
+           bsTooltip("most_dissimilar1", "Find Least Similar", placement = "left")),
     column(2,
            h1(textOutput(outputId = 'similarity'), align="center")),
     column(1, style='padding:2px',
@@ -66,8 +65,7 @@ ui <- fluidPage(
            actionButton("most_dissimilar2",
                         "", icon=icon("angle-double-down"), width='100%',
                         style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white'),
-           bsTooltip("most_dissimilar2", "Find Least Similar", placement = "right")
-    ),
+           bsTooltip("most_dissimilar2", "Find Least Similar", placement = "right")),
     column(4, align="center",
            selectizeInput("pokemon2", "PKMN 2:", table$Name, selected="Blastoise"),
            actionButton("randomize2", "", icon=icon("random"), 
