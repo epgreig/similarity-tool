@@ -1,4 +1,5 @@
 library('shiny')
+library('shinyBS')
 library('DT')
 
 source('conditional_formatting.R')
@@ -24,36 +25,46 @@ ui <- fluidPage(
            actionButton("most_similar1",
                         "", icon=icon("angle-double-up"), width='100%',
                         style='font-size:10pt; padding:2px; margin:0px; color:white; background-color:rgb(51,122,183); border-color:white'),
+           bsTooltip("most_similar1", "Find Most Similar", placement = "left"),
            br(),
            actionButton("next_similar1",
                         "", icon=icon("angle-up"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-4px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
+           bsTooltip("next_similar1", "Find More Similar", placement = "left"),
            br(),
            actionButton("next_dissimilar1",
                         "", icon=icon("angle-down"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-6px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
+           bsTooltip("next_dissimilar1", "Find Less Similar", placement = "left"),
            br(),
            actionButton("most_dissimilar1",
                         "", icon=icon("angle-double-down"), width='100%',
-                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white')),
+                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white'),
+           bsTooltip("most_dissimilar1", "Find Least Similar", placement = "left")
+    ),
     column(2,
            h1(textOutput(outputId = 'similarity'), align="center")),
     column(1, style='padding:2px',
            actionButton("most_similar2",
                         "", icon=icon("angle-double-up"), width='100%',
                         style='font-size:10pt; padding:2px; margin:0px; color:white; background-color:rgb(51,122,183); border-color:white'),
+           bsTooltip("most_similar2", "Find Most Similar", placement = "right"),
            br(),
            actionButton("next_similar2",
                         "", icon=icon("angle-up"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-4px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
+           bsTooltip("next_similar2", "Find More Similar", placement = "right"),
            br(),
            actionButton("next_dissimilar2",
                         "", icon=icon("angle-down"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-6px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
+           bsTooltip("next_dissimilar2", "Find Less Similar", placement = "right"),
            br(),
            actionButton("most_dissimilar2",
                         "", icon=icon("angle-double-down"), width='100%',
-                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white')),
+                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white'),
+           bsTooltip("most_dissimilar2", "Find Least Similar", placement = "right")
+    ),
     column(4, align="center",
            selectizeInput("pokemon2", "PKMN 2:", table$Name, selected="Blastoise"))
   ),
@@ -69,7 +80,6 @@ ui <- fluidPage(
                   imageOutput(outputId = 'image2'))
   ),
   
-  br()
 )
 
 server <- function(input, output, session) {
