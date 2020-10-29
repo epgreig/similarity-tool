@@ -72,6 +72,6 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 
 1. Dialga: average match -3.1%
 
-**Most Generic Pokemon** (measure by lowest average similarity score with all other Pokemon)
+**Most Generic Pokemon** (measure by highest average similarity score with all other Pokemon)
 
 1. Bibarel: average match 3.2%
