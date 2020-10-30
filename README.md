@@ -18,7 +18,7 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 #### Eligible Pokemon
 - First 8 Generations of Pokemon
 - Fully-Evolved Pokemon Only
-- Includes Megas and most alternate forms
+- Includes Megas and alternate forms if stats are different
 - No Gigantamax Forms
 
 #### Features
@@ -40,7 +40,7 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 - One-hot encoding Type data (treating Primary and Secondary Types as equivalent)
 - One-hot encoding Egg Group data (treating Primary and Secondary Egg Groups as equivalent)
 - One-hot encoding Gender ratios into three binary variables: Male/Female Dominant (if gender ratio skews toward one or the other) or Genderless
-- Standardize all features: centering on the <ins>median</ins>, and with standard deviation of 1 for the six Stat features, 0.5 for the Type and Egg Group features, and 0.25 for the remaining features (I want to weigh the Base Stats of the pokemon more than anything else for similarity)
+- Standardize all features: centering on the <ins>median</ins>, and with standard deviation of 1 for the six Stat features, 1/3 for the Type and Egg Group features, and 1/3 for the remaining features (I want to weigh the Base Stats of the pokemon more than anything else for similarity)
 - Note: the one-hot encoded Type features were scaled together so that the rarity of a type was not considered in similarity (e.g. Fairy is more rare than Water but I want to consider them equally dissimilar from any other type). This was also done for Egg Groups.
 - Similarity between 2 pkmn: Cosine of the angle between their corresponding 45-dimensional vectors
 
@@ -55,23 +55,44 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 
 **Most Similar Pokemon Pairs**
 
-1. Hitmonchan and Hitmontop: 99.21%
-2. Plusle and Minun: 99.19%
-3. Hitmonlee and Hitmonchan: 98.1%
-4. Alakazam and Espeon: 97.8%
+1. Lycanroc and Lycanroc-Dusk: 99.9%
+2. Purugly and Cinccino: 98.4%
+3. Hitmonchan and Hitmontop: 97.8%
+4. Plusle and Minun: 97.6%
+5. Gourgeist and Gourgeist-Small: 97.6%
+6. Furret and Linoone: 97.4%
 
-**Among the pairs that don't share a type: highest is Mew and Shaymin: 52%
+**Most Similar Pokemon Pairs Who Don't Share a Type**
+
+1. Darmanitan (Fire type) and Darmanitan-Galar (Ice type): 89.3%
+2. Zacian (Fairy) and Zamazenta (Fighting): 89.2%
+2. Deoxys-Attack (Psychic) and Pheromosa (Bug/Fighting): 89.2%
+
+
+**Most Dissimilar Pokemon Pairs**
+
+1. Shuckle and Deoxys-Attack: -72.3%
+2. Deoxys-Attack and Pyukumuku: -71.8%
+3. Pyukumuku and Pheromosa: -71.0%
+4. Mewtwo-Mega-X and Smeargle: -68.0%
 
 **Most Unique Pokemon** (measured by lowest similarity score for closest match)
 
-1. Heatran: closest match 53% w/ Metagross
-2. Umbreon: closest match 56% w/ Mightyena
-3. Xatu: closest match 59% w/ Chimecho
+1. Nidoqueen: closest match 54.4% w/ Nidoking
+2. Decidueye: closest match 55.8% w/ Dhelmise
+3. Garbodor: closest match 57.9% w/ Solrock
+
+**Least Unique Pokemon** (measured by highest similarity score for closest match)
+
+1. Phione: furthest match -3.8% w/ Rayquaza-Mega
+2. Flygon: furthest match -7.5% w/ Pincurchin
+3. Glalie: furthest match -7.5% w/ Diancie-Mega
  
-**Least Generic Pokemon** (measure by lowest average similarity score with all other Pokemon)
-
-1. Dialga: average match -3.1%
-
 **Most Generic Pokemon** (measure by highest average similarity score with all other Pokemon)
 
-1. Bibarel: average match 3.2%
+1. Samurott: average match 23.6%
+
+**Least Generic Pokemon** (measure by lowest average similarity score with all other Pokemon)
+
+1. Shedinja: average match 1.7%
+
