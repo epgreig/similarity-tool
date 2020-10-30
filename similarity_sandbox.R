@@ -183,42 +183,41 @@ for (i in 1:nrow(table)){
   x[i] <- cosine_scores[i,most_similar[i]]
 }
 
+y <- 1:nrow(table)
+for (i in 1:nrow(table)){
+  y[i] <- cosine_scores[i,most_dissimilar[i]]
+}
+
 length(unique(most_similar))/nrow(table_numeric)
 length(cosine_scores[abs(cosine_scores) < 0.1])/length(cosine_scores)
 length(cosine_scores[abs(cosine_scores) < 0.2])/length(cosine_scores)
-# No Egg Groups
-# 
-# 43%
-# 76%
-# W/ Egg Groups
-# 46%
-# 82%
-# types and eggs div by sqrt(2)
-# 44%
-# 77%
-# types and eggs div by 2
-# 64% unique
-# 38%
-# 68%
-# all div by sqrt(2)
-# 63% unique
-# 44%
-# 77%
 
 #Finding Closest Pairs
 
 max(x)
-match(max(x),x) # Hitmonchan (45)
-x[45] <- 0.5
-match(max(x),x) # Hitmontop (114)
-x[114] <- 0.5
-match(max(x),x) # Plusle (149)
-x[149]
-x[149]<- 0.5
-match(max(x),x) # Minun (150)
-x[150] <- 0.5
-max(x)
-match(max(x),x) # Hitmonlee (44)
-x[44] <- 0.5
-max(x)
-match(max(x),x) # Alakazam (26), Espeon (87)
+match(max(x),x)
+most_similar[490]
+table$Name[c(490,492)]
+cosine_scores[490,492] <- 0.5
+# re-run x definition and most_similar/dissimilar 
+
+# Furthest pairs:
+match(min(y),y)
+
+# Most unique:
+match(min(x),x)
+
+# Least unique:
+match(max(y),y)
+
+# Without sharing a type:
+m <- table[,combined_type_cols, with=FALSE]
+m <- as.matrix(m)
+share_type <- m %*% t(m)
+for (i in 1:nrow(table)) {
+  for (j in 1:nrow(table)) {
+    if (share_type[i,j] > 0) {
+      cosine_scores[i,j] <- 0
+    }
+  }
+}
