@@ -82,7 +82,7 @@ I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbe
 2. Decidueye: closest match 55.8% w/ Dhelmise
 3. Garbodor: closest match 57.9% w/ Solrock
 
-**Least Unique Pokemon** (measured by highest similarity score for closest match)
+**Least Unique Pokemon** (measured by highest similarity score for furthest match)
 
 1. Phione: furthest match -3.8% w/ Rayquaza-Mega
 2. Flygon: furthest match -7.5% w/ Pincurchin
