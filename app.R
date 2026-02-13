@@ -20,7 +20,7 @@ ui <- fluidPage(
 
   fluidRow(
     column(4, align="center",
-           selectizeInput("pokemon1", "PKMN 1:", table$Name, selected="Charizard"),
+           selectizeInput("pokemon1", "PKMN 1:", choices=NULL),
            actionButton("randomize1", "", icon=icon("random"), 
                         style='font-size:9pt; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; margin-top:-18px; color:white; background-color:rgb(51,183,122); border-color:white'),
            bsTooltip("randomize1", "Randomize")),
@@ -67,7 +67,7 @@ ui <- fluidPage(
                         style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white'),
            bsTooltip("most_dissimilar2", "Find Least Similar", placement = "right")),
     column(4, align="center",
-           selectizeInput("pokemon2", "PKMN 2:", table$Name, selected="Blastoise"),
+           selectizeInput("pokemon2", "PKMN 2:", choices=NULL),
            actionButton("randomize2", "", icon=icon("random"), 
                         style='font-size:9pt; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; margin-top:-18px; color:white; background-color:rgb(51,183,122); border-color:white'),
            bsTooltip("randomize2", "Randomize"))
@@ -87,6 +87,9 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
+
+  updateSelectizeInput(session, "pokemon1", choices=table$Name, selected="Charizard", server=TRUE)
+  updateSelectizeInput(session, "pokemon2", choices=table$Name, selected="Blastoise", server=TRUE)
 
   get_index1 <- reactive({
     id <- which(table$Name == input$pokemon1)

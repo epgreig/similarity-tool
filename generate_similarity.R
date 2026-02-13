@@ -5,9 +5,13 @@ library('data.table')
 data <- read.csv('pokemon_data.csv')
 data <- data.table(data)
 
-# One-Hot
+# One-Hot (convert to factor first - required by one_hot since R 4.0 defaults stringsAsFactors=FALSE)
 types <- c(as.character(unique(data$Primary.Type)))
 egg_groups <- c(as.character(unique(data$Primary.Egg.Group)))
+data$Primary.Type <- as.factor(data$Primary.Type)
+data$Secondary.Type <- as.factor(data$Secondary.Type)
+data$Primary.Egg.Group <- as.factor(data$Primary.Egg.Group)
+data$Secondary.Egg.Group <- as.factor(data$Secondary.Egg.Group)
 table <- one_hot(data, c("Primary.Type", "Secondary.Type", "Primary.Egg.Group","Secondary.Egg.Group"))
 
 # Combine Primary and Secondary Type Features
@@ -59,7 +63,7 @@ features_gender <- c("Male.Dominant", "Female.Dominant", "Genderless")
 features_misc <- c("Base.Happiness", "Catch.Rate")
 
 # Center and Scale
-non_scaling_columns <- c("Name","Pokedex","Region.of.Origin")
+non_scaling_columns <- c("Name","Pokemon.Id","Pokedex","Region.of.Origin")
 centers <- apply(table[, -non_scaling_columns, with=FALSE], 2, median)
 #centers[c(features_types, features_egg_groups)] <- apply(table[, c(features_types, features_egg_groups), with=FALSE], 2, mean)
 std_devs <- apply(table[, -non_scaling_columns, with=FALSE], 2, sd)
@@ -84,14 +88,8 @@ distances <- as.matrix(dist(table_numeric, method = "manhattan", upper=TRUE))
 sim <- table_numeric / sqrt(rowSums(table_numeric * table_numeric))
 cosine_scores <- as.matrix(sim) %*% t(as.matrix(sim))
 
-# Get Image Names
-get_image_name <- function(pokedex, name) {
-  suffix <- gsub(" ", "-", tolower(sub("^[^-]*", "", name)))
-  image_name <- paste0("images/", pokedex, suffix, ".png")
-  return(image_name)
-}
-
-table$Image.Name <- get_image_name(table$Pokedex, table$Name)
+# Get Image Names (use Pokemon.Id directly — unique, no collision)
+table$Image.Name <- paste0("images/", table$Pokemon.Id, ".png")
 
 # Attach full similarity rankings for each row
 table_with_scores <- cbind(table, t(apply(cosine_scores, 1, order, decreasing=TRUE)))
