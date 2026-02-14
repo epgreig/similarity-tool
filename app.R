@@ -59,6 +59,58 @@ ui <- fluidPage(
       $(document).on('mouseleave', '[data-toggle=\"tooltip\"]', function() {
         $(this).tooltip('hide');
       });
+
+      // Bind raw target_score input to Shiny
+      var targetScoreBinding = new Shiny.InputBinding();
+      $.extend(targetScoreBinding, {
+        find: function(scope) { return $(scope).find('#target_score'); },
+        getValue: function(el) { return $(el).val(); },
+        subscribe: function(el, callback) {
+          $(el).on('change.targetScore keyup.targetScore', function() { callback(); });
+        },
+        unsubscribe: function(el) { $(el).off('.targetScore'); }
+      });
+      Shiny.inputBindings.register(targetScoreBinding, 'targetScore');
+
+      // Similarity edit mode
+      $(document).on('click', '#similarity-display', function(e) {
+        e.stopPropagation();
+        $('#similarity-display').hide();
+        $('#similarity-edit').show();
+        $('#target_score').val('').focus();
+      });
+      $(document).on('keydown', '#target_score', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          // Force Shiny to pick up current value before triggering click
+          $(this).trigger('change');
+          setTimeout(function() { $('#find_match').click(); }, 50);
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          $('#similarity-edit').hide();
+          $('#similarity-display').show();
+        }
+      });
+      $(document).on('click', function(e) {
+        if ($('#similarity-edit').is(':visible') &&
+            !$(e.target).closest('#similarity-edit').length) {
+          $('#similarity-edit').hide();
+          $('#similarity-display').show();
+        }
+      });
+      Shiny.addCustomMessageHandler('setFixedSide', function(side) {
+        if (side === 1) {
+          $('#fix_left').addClass('fix-active');
+          $('#fix_right').removeClass('fix-active');
+        } else {
+          $('#fix_right').addClass('fix-active');
+          $('#fix_left').removeClass('fix-active');
+        }
+      });
+      Shiny.addCustomMessageHandler('showSimilarity', function(data) {
+        $('#similarity-edit').hide();
+        $('#similarity-display').show();
+      });
     ")),
     tags$style(HTML("
       body {
@@ -84,6 +136,74 @@ ui <- fluidPage(
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         display: inline-block;
         margin-top: 10px;
+      }
+      #similarity-display {
+        cursor: pointer;
+        position: relative;
+        transition: background 0.15s ease;
+      }
+      #similarity-display:hover {
+        background: #f8f9fa;
+        border-radius: 16px;
+      }
+      #similarity-display::after {
+        content: '\\1F50D';
+        position: absolute;
+        top: 4px;
+        right: 6px;
+        font-size: 14px;
+        color: #aaa;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+      }
+      #similarity-display:hover::after {
+        opacity: 1;
+      }
+      #similarity-edit .score-input {
+        font-size: 28pt;
+        font-weight: 700;
+        color: #2c3e50;
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid #3498db;
+        outline: none;
+        width: 80px;
+        text-align: center;
+        padding: 0;
+        margin: 0;
+      }
+      #similarity-edit .score-suffix {
+        font-size: 28pt;
+        font-weight: 700;
+        color: #2c3e50;
+      }
+      .fix-toggle {
+        font-size: 9pt !important;
+        padding: 3px 10px !important;
+        color: #888 !important;
+        background-color: #e9ecef !important;
+        border-radius: 20px !important;
+        margin-top: 6px !important;
+        transition: all 0.15s ease !important;
+      }
+      .fix-toggle.fix-active {
+        color: white !important;
+        background-color: #3498db !important;
+      }
+      .fix-label {
+        font-size: 8pt;
+        color: #aaa;
+        margin-top: 8px;
+        margin-bottom: 2px;
+      }
+      #find_match {
+        font-size: 9pt !important;
+        padding: 3px 14px !important;
+        color: white !important;
+        background-color: #3498db !important;
+        border-radius: 20px !important;
+        margin-top: 6px !important;
+        margin-left: 4px !important;
       }
       .pokemon-image {
         background: white;
@@ -167,7 +287,17 @@ ui <- fluidPage(
                         "", icon=icon("angle-double-down"), width='100%',
                         style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white')),
     column(2, align="center",
-           div(class="similarity-badge", textOutput(outputId = 'similarity', inline=TRUE))),
+           div(id="similarity-display", class="similarity-badge",
+               textOutput(outputId = 'similarity', inline=TRUE)),
+           div(id="similarity-edit", style="display:none; text-align:center; margin-top:10px",
+               div(class="similarity-badge", style="padding:8px 12px",
+                   tags$input(id="target_score", type="text", class="score-input",
+                              placeholder="85", maxlength="4"),
+                   tags$span("%", class="score-suffix")),
+               div(class="fix-label", "Find match for:"),
+               div(actionButton("fix_left", "Charizard", class="fix-toggle fix-active"),
+                   actionButton("fix_right", "Blastoise", class="fix-toggle")),
+               div(actionButton("find_match", "Go")))),
     column(1, style='padding:2px',
            actionButton("most_similar2",
                         "", icon=icon("angle-double-up"), width='100%',
@@ -237,6 +367,37 @@ server <- function(input, output, session) {
       setTooltip("next_dissimilar2", paste("Less Similar to", name2), "right")
       setTooltip("most_dissimilar2", paste("Least Similar to", name2), "right")
     }
+  })
+
+  # Editable similarity: which side is fixed
+  fixed_side <- reactiveVal(1)
+
+  observeEvent(input$fix_left, { fixed_side(1) })
+  observeEvent(input$fix_right, { fixed_side(2) })
+
+  observe({
+    name1 <- input$pokemon1
+    name2 <- input$pokemon2
+    if (!is.null(name1) && name1 != "") updateActionButton(session, "fix_left", label = name1)
+    if (!is.null(name2) && name2 != "") updateActionButton(session, "fix_right", label = name2)
+    session$sendCustomMessage('setFixedSide', fixed_side())
+  })
+
+  observeEvent(input$find_match, {
+    target <- as.numeric(gsub("[^0-9.\\-]", "", input$target_score)) / 100
+    if (is.na(target)) return()
+
+    fixed_idx <- if (fixed_side() == 1) get_index1() else get_index2()
+    scores <- cosine_scores[fixed_idx, ]
+    scores[fixed_idx] <- NA  # exclude self
+    match_idx <- which.min(abs(scores - target))
+
+    if (fixed_side() == 1) {
+      updateSelectizeInput(session, 'pokemon2', selected = table$Name[match_idx])
+    } else {
+      updateSelectizeInput(session, 'pokemon1', selected = table$Name[match_idx])
+    }
+    session$sendCustomMessage('showSimilarity', list())
   })
 
   get_index1 <- reactive({
