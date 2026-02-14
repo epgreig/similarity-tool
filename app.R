@@ -7,12 +7,83 @@ source('prepare_app_data.R')
 
 ui <- fluidPage(
   
-  tags$head(HTML("<title>PKMN Similarity Tool</title>")),
-  
+  tags$head(
+    HTML("<title>Pokémon Similarity Tool</title>"),
+    tags$link(href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap", rel="stylesheet"),
+    tags$style(HTML("
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: #f0f2f5;
+      }
+      .container-fluid {
+        max-width: 1100px;
+      }
+      h3 {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: #2c3e50;
+        margin-bottom: 0;
+      }
+      .similarity-badge {
+        font-size: 28pt;
+        font-weight: 700;
+        color: #2c3e50;
+        background: white;
+        border-radius: 16px;
+        padding: 8px 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        display: inline-block;
+        margin-top: 10px;
+      }
+      .pokemon-image {
+        background: white;
+        border-radius: 16px;
+        padding: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+      .btn {
+        border-radius: 8px !important;
+        transition: opacity 0.15s ease;
+        border: none !important;
+      }
+      .btn:hover {
+        opacity: 0.85;
+      }
+      .selectize-input {
+        border-radius: 10px !important;
+        border: 2px solid #e0e0e0 !important;
+        padding: 6px 12px !important;
+        font-size: 11pt !important;
+      }
+      .selectize-input.focus {
+        border-color: #3498db !important;
+        box-shadow: 0 0 0 3px rgba(52,152,219,0.15) !important;
+      }
+      .selectize-dropdown {
+        border-radius: 10px !important;
+        border: 2px solid #e0e0e0 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+      }
+      table.dataTable {
+        background: white;
+        border-radius: 12px !important;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+      table.dataTable td {
+        font-family: 'Inter', sans-serif !important;
+      }
+      .checkbox label {
+        font-size: 9pt;
+        color: #7f8c8d;
+      }
+    "))
+  ),
+
   fluidRow(
     column(3),
     column(6,
-           titlePanel(h3("PKMN Similarity Tool", align="center"))),
+           titlePanel(h3("Pokémon Similarity Tool", align="center"))),
     column(3, align="right",
            checkboxInput("scale_images", "Scale Images by Height", value = FALSE, width = NULL))
   ),
@@ -20,7 +91,7 @@ ui <- fluidPage(
 
   fluidRow(
     column(4, align="center",
-           selectizeInput("pokemon1", "PKMN 1:", choices=NULL),
+           selectizeInput("pokemon1", "PKMN 1:", table$Name, selected="Charizard"),
            actionButton("randomize1", "", icon=icon("random"), 
                         style='font-size:9pt; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; margin-top:-18px; color:white; background-color:rgb(51,183,122); border-color:white'),
            bsTooltip("randomize1", "Randomize")),
@@ -28,46 +99,38 @@ ui <- fluidPage(
            actionButton("most_similar1",
                         "", icon=icon("angle-double-up"), width='100%',
                         style='font-size:10pt; padding:2px; margin:0px; color:white; background-color:rgb(51,122,183); border-color:white'),
-           bsTooltip("most_similar1", "Find Most Similar", placement = "left"),
            br(),
            actionButton("next_similar1",
                         "", icon=icon("angle-up"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-4px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
-           bsTooltip("next_similar1", "Find More Similar", placement = "left"),
            br(),
            actionButton("next_dissimilar1",
                         "", icon=icon("angle-down"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-6px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
-           bsTooltip("next_dissimilar1", "Find Less Similar", placement = "left"),
            br(),
            actionButton("most_dissimilar1",
                         "", icon=icon("angle-double-down"), width='100%',
-                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white'),
-           bsTooltip("most_dissimilar1", "Find Least Similar", placement = "left")),
-    column(2,
-           h1(textOutput(outputId = 'similarity'), align="center")),
+                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white')),
+    column(2, align="center",
+           div(class="similarity-badge", textOutput(outputId = 'similarity', inline=TRUE))),
     column(1, style='padding:2px',
            actionButton("most_similar2",
                         "", icon=icon("angle-double-up"), width='100%',
                         style='font-size:10pt; padding:2px; margin:0px; color:white; background-color:rgb(51,122,183); border-color:white'),
-           bsTooltip("most_similar2", "Find Most Similar", placement = "right"),
            br(),
            actionButton("next_similar2",
                         "", icon=icon("angle-up"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-4px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
-           bsTooltip("next_similar2", "Find More Similar", placement = "right"),
            br(),
            actionButton("next_dissimilar2",
                         "", icon=icon("angle-down"), width='100%',
                         style='font-size:10pt; padding:0px; margin-top:-6px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
-           bsTooltip("next_dissimilar2", "Find Less Similar", placement = "right"),
            br(),
            actionButton("most_dissimilar2",
                         "", icon=icon("angle-double-down"), width='100%',
-                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white'),
-           bsTooltip("most_dissimilar2", "Find Least Similar", placement = "right")),
+                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white')),
     column(4, align="center",
-           selectizeInput("pokemon2", "PKMN 2:", choices=NULL),
+           selectizeInput("pokemon2", "PKMN 2:", table$Name, selected="Blastoise"),
            actionButton("randomize2", "", icon=icon("random"), 
                         style='font-size:9pt; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; margin-top:-18px; color:white; background-color:rgb(51,183,122); border-color:white'),
            bsTooltip("randomize2", "Randomize"))
@@ -75,21 +138,38 @@ ui <- fluidPage(
   br(),
   
   fluidRow(column(4, align="center",
-                  imageOutput(outputId = 'image1')),
+                  div(class="pokemon-image", imageOutput(outputId = 'image1'))),
            column(4,align="center",
                   div(dataTableOutput(outputId = 'grid'), style="text-align:center"),
                   tags$head(tags$style(type = "text/css", "#grid th {display:none;}")),
                   tags$head(tags$style(type = "text/css", "#grid th {border-width: 5px;}"))),
            column(4, align="center",
-                  imageOutput(outputId = 'image2'))
+                  div(class="pokemon-image", imageOutput(outputId = 'image2')))
   )
   
 )
 
 server <- function(input, output, session) {
 
-  updateSelectizeInput(session, "pokemon1", choices=table$Name, selected="Charizard", server=TRUE)
-  updateSelectizeInput(session, "pokemon2", choices=table$Name, selected="Blastoise", server=TRUE)
+  # Dynamic tooltips that include the Pokemon name
+  observe({
+    name1 <- input$pokemon1
+    if (!is.null(name1) && name1 != "") {
+      addTooltip(session, "most_similar1", paste("Most Similar to", name1), placement="left")
+      addTooltip(session, "next_similar1", paste("More Similar to", name1), placement="left")
+      addTooltip(session, "next_dissimilar1", paste("Less Similar to", name1), placement="left")
+      addTooltip(session, "most_dissimilar1", paste("Least Similar to", name1), placement="left")
+    }
+  })
+  observe({
+    name2 <- input$pokemon2
+    if (!is.null(name2) && name2 != "") {
+      addTooltip(session, "most_similar2", paste("Most Similar to", name2), placement="right")
+      addTooltip(session, "next_similar2", paste("More Similar to", name2), placement="right")
+      addTooltip(session, "next_dissimilar2", paste("Less Similar to", name2), placement="right")
+      addTooltip(session, "most_dissimilar2", paste("Least Similar to", name2), placement="right")
+    }
+  })
 
   get_index1 <- reactive({
     id <- which(table$Name == input$pokemon1)
@@ -172,12 +252,12 @@ server <- function(input, output, session) {
   
   observeEvent(input$randomize1, {
     random_pkmn <- sample(table$Name, 1)
-    updateTextInput(session, 'pokemon1', value=random_pkmn)
+    updateSelectizeInput(session, 'pokemon1', selected=random_pkmn)
   })
   
   observeEvent(input$randomize2, {
     random_pkmn <- sample(table$Name, 1)
-    updateTextInput(session, 'pokemon2', value=random_pkmn)
+    updateSelectizeInput(session, 'pokemon2', selected=random_pkmn)
   })
   
   V_columns <- paste0("V",1:nrow(table))
@@ -188,7 +268,7 @@ server <- function(input, output, session) {
     if (match_id == get_index1()) {
       match_id <- table$V2[get_index1()]
     }
-    updateTextInput(session, 'pokemon2', value=table$Name[match_id])
+    updateSelectizeInput(session, 'pokemon2', selected=table$Name[match_id])
   })
   
   observeEvent(input$next_similar1, {
@@ -196,7 +276,7 @@ server <- function(input, output, session) {
     next_rank <- max(current_rank-1, 1)
     V_next_rank <- paste0("V", next_rank)
     next_similar_id <- as.numeric(table[get_index1(),V_next_rank,with=FALSE])
-    updateTextInput(session, 'pokemon2', value=table$Name[next_similar_id])
+    updateSelectizeInput(session, 'pokemon2', selected=table$Name[next_similar_id])
   })
   
   observeEvent(input$next_dissimilar1, {
@@ -204,12 +284,12 @@ server <- function(input, output, session) {
     next_rank <- min(current_rank+1, nrow(table))
     V_next_rank <- paste0("V", next_rank)
     next_dissimilar_id <- as.numeric(table[get_index1(),V_next_rank,with=FALSE])
-    updateTextInput(session, 'pokemon2', value=table$Name[next_dissimilar_id])
+    updateSelectizeInput(session, 'pokemon2', selected=table$Name[next_dissimilar_id])
   })
   
   observeEvent(input$most_dissimilar1, {
     mismatch_id <- as.numeric(table[get_index1(), mismatch_column,with=FALSE])
-    updateTextInput(session, 'pokemon2', value=table$Name[mismatch_id])
+    updateSelectizeInput(session, 'pokemon2', selected=table$Name[mismatch_id])
   })
   
   observeEvent(input$most_similar2, {
@@ -217,7 +297,7 @@ server <- function(input, output, session) {
     if (match_id == get_index2()) {
       match_id <- table$V2[get_index2()]
     }
-    updateTextInput(session, 'pokemon1', value=table$Name[match_id])
+    updateSelectizeInput(session, 'pokemon1', selected=table$Name[match_id])
   })
   
   observeEvent(input$next_similar2, {
@@ -225,7 +305,7 @@ server <- function(input, output, session) {
     next_rank <- max(current_rank-1, 1)
     V_next_rank <- paste0("V", next_rank)
     next_similar_id <- as.numeric(table[get_index2(),V_next_rank,with=FALSE])
-    updateTextInput(session, 'pokemon1', value=table$Name[next_similar_id])
+    updateSelectizeInput(session, 'pokemon1', selected=table$Name[next_similar_id])
   })
   
   observeEvent(input$next_dissimilar2, {
@@ -233,12 +313,12 @@ server <- function(input, output, session) {
     next_rank <- min(current_rank+1, nrow(table))
     V_next_rank <- paste0("V", next_rank)
     next_dissimilar_id <- as.numeric(table[get_index2(),V_next_rank,with=FALSE])
-    updateTextInput(session, 'pokemon1', value=table$Name[next_dissimilar_id])
+    updateSelectizeInput(session, 'pokemon1', selected=table$Name[next_dissimilar_id])
   })
   
   observeEvent(input$most_dissimilar2, {
     mismatch_id <- as.numeric(table[get_index2(), mismatch_column,with=FALSE])
-    updateTextInput(session, 'pokemon1', value=table$Name[mismatch_id])
+    updateSelectizeInput(session, 'pokemon1', selected=table$Name[mismatch_id])
   })
 }
 
