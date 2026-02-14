@@ -2,7 +2,7 @@ library('data.table')
 
 source('generate_similarity.R')
 
-table <- table_with_scores[,c("Name", "Image.Name", paste0("V", 1:nrow(table_with_scores))), with=FALSE]
+table <- table_with_scores[,c("Name", "Pokedex", "Image.Name", paste0("V", 1:nrow(table_with_scores))), with=FALSE]
 diag(cosine_scores) <- 1
 
 data <- read.csv('pokemon_data.csv')
