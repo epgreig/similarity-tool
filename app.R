@@ -42,6 +42,24 @@ ui <- fluidPage(
     tags$link(href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap", rel="stylesheet"),
     tags$script(HTML(pokedex_js)),
     tags$script(HTML(gen_js)),
+    tags$script(HTML("
+      Shiny.addCustomMessageHandler('setTooltip', function(data) {
+        var el = $('#' + data.id);
+        if (el.data('bs.tooltip')) {
+          el.tooltip('hide').tooltip('destroy');
+        }
+        el.attr('title', data.title)
+          .attr('data-toggle', 'tooltip')
+          .attr('data-placement', data.placement || 'bottom');
+        el.tooltip({container: 'body'});
+      });
+      $(document).on('click', '.btn', function() {
+        $(this).tooltip('hide');
+      });
+      $(document).on('mouseleave', '[data-toggle=\"tooltip\"]', function() {
+        $(this).tooltip('hide');
+      });
+    ")),
     tags$style(HTML("
       body {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -110,6 +128,9 @@ ui <- fluidPage(
         font-size: 11pt;
         color: #2c3e50;
         font-weight: 600;
+      }
+      .tooltip .tooltip-arrow {
+        display: none !important;
       }
     "))
   ),
@@ -195,22 +216,26 @@ ui <- fluidPage(
 server <- function(input, output, session) {
 
   # Dynamic tooltips that include the Pokemon name
+  setTooltip <- function(id, title, placement="bottom") {
+    session$sendCustomMessage('setTooltip', list(id=id, title=title, placement=placement))
+  }
+
   observe({
     name1 <- input$pokemon1
     if (!is.null(name1) && name1 != "") {
-      addTooltip(session, "most_similar1", paste("Most Similar to", name1), placement="left")
-      addTooltip(session, "next_similar1", paste("More Similar to", name1), placement="left")
-      addTooltip(session, "next_dissimilar1", paste("Less Similar to", name1), placement="left")
-      addTooltip(session, "most_dissimilar1", paste("Least Similar to", name1), placement="left")
+      setTooltip("most_similar1", paste("Most Similar to", name1), "left")
+      setTooltip("next_similar1", paste("More Similar to", name1), "left")
+      setTooltip("next_dissimilar1", paste("Less Similar to", name1), "left")
+      setTooltip("most_dissimilar1", paste("Least Similar to", name1), "left")
     }
   })
   observe({
     name2 <- input$pokemon2
     if (!is.null(name2) && name2 != "") {
-      addTooltip(session, "most_similar2", paste("Most Similar to", name2), placement="right")
-      addTooltip(session, "next_similar2", paste("More Similar to", name2), placement="right")
-      addTooltip(session, "next_dissimilar2", paste("Less Similar to", name2), placement="right")
-      addTooltip(session, "most_dissimilar2", paste("Least Similar to", name2), placement="right")
+      setTooltip("most_similar2", paste("Most Similar to", name2), "right")
+      setTooltip("next_similar2", paste("More Similar to", name2), "right")
+      setTooltip("next_dissimilar2", paste("Less Similar to", name2), "right")
+      setTooltip("most_dissimilar2", paste("Least Similar to", name2), "right")
     }
   })
 
