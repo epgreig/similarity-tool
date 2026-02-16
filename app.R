@@ -39,6 +39,8 @@ ui <- fluidPage(
 
   tags$head(
     HTML("<title>Pokémon Similarity Tool</title>"),
+    tags$link(rel="icon", type="image/svg+xml",
+              href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='white' stroke='%232c3e50' stroke-width='4'/><path d='M2,50 H98' stroke='%232c3e50' stroke-width='4'/><circle cx='50' cy='50' r='14' fill='white' stroke='%232c3e50' stroke-width='4'/><circle cx='50' cy='50' r='6' fill='%232c3e50'/><path d='M2,50 A48,48 0 0,1 98,50' fill='%23e74c3c'/></svg>"),
     tags$link(href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap", rel="stylesheet"),
     tags$script(HTML(pokedex_js)),
     tags$script(HTML(gen_js)),
@@ -110,6 +112,18 @@ ui <- fluidPage(
       Shiny.addCustomMessageHandler('showSimilarity', function(data) {
         $('#similarity-edit').hide();
         $('#similarity-display').show();
+      });
+
+      // Animate similarity badge on score change
+      var simObs = new MutationObserver(function() {
+        var el = document.getElementById('similarity-display');
+        el.classList.remove('score-changed');
+        void el.offsetWidth;
+        el.classList.add('score-changed');
+      });
+      $(document).on('shiny:connected', function() {
+        var target = document.getElementById('similarity');
+        if (target) simObs.observe(target, { childList: true, characterData: true, subtree: true });
       });
     ")),
     tags$style(HTML("
@@ -236,6 +250,7 @@ ui <- fluidPage(
         box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
       }
       table.dataTable {
+        table-layout: fixed;
         background: white;
         border-radius: 12px !important;
         overflow: hidden;
@@ -251,6 +266,32 @@ ui <- fluidPage(
       }
       .tooltip .tooltip-arrow {
         display: none !important;
+      }
+      @keyframes badge-fade {
+        0% { opacity: 0; transform: translateY(4px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+      #similarity-display.score-changed #similarity {
+        animation: badge-fade 0.3s ease;
+      }
+      .nav-btn-group {
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-top: 10px;
+      }
+      .nav-btn-group .btn {
+        border-radius: 0 !important;
+        margin: 0 !important;
+        padding: 4px 0 !important;
+        font-size: 10pt !important;
+        width: 100%;
+        border-top: 1px solid rgba(255,255,255,0.2) !important;
+      }
+      .nav-btn-group .btn:first-child {
+        border-top: none !important;
       }
     "))
   ),
@@ -271,21 +312,15 @@ ui <- fluidPage(
                         style='font-size:9pt; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; margin-top:-18px; color:white; background-color:rgb(51,183,122); border-color:white'),
            bsTooltip("randomize1", "Randomize")),
     column(1, style='padding:2px',
-           actionButton("most_similar1",
-                        "", icon=icon("angle-double-up"), width='100%',
-                        style='font-size:10pt; padding:2px; margin:0px; color:white; background-color:rgb(51,122,183); border-color:white'),
-           br(),
-           actionButton("next_similar1",
-                        "", icon=icon("angle-up"), width='100%',
-                        style='font-size:10pt; padding:0px; margin-top:-4px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
-           br(),
-           actionButton("next_dissimilar1",
-                        "", icon=icon("angle-down"), width='100%',
-                        style='font-size:10pt; padding:0px; margin-top:-6px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
-           br(),
-           actionButton("most_dissimilar1",
-                        "", icon=icon("angle-double-down"), width='100%',
-                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white')),
+           div(class="nav-btn-group",
+               actionButton("most_similar1", "", icon=icon("angle-double-up"),
+                            style='color:white; background-color:rgb(51,122,183)'),
+               actionButton("next_similar1", "", icon=icon("angle-up"),
+                            style='color:white; background-color:rgb(120,180,240)'),
+               actionButton("next_dissimilar1", "", icon=icon("angle-down"),
+                            style='color:white; background-color:rgb(120,180,240)'),
+               actionButton("most_dissimilar1", "", icon=icon("angle-double-down"),
+                            style='color:white; background-color:rgb(51,122,183)'))),
     column(2, align="center",
            div(id="similarity-display", class="similarity-badge",
                textOutput(outputId = 'similarity', inline=TRUE)),
@@ -299,21 +334,15 @@ ui <- fluidPage(
                    actionButton("fix_right", "Blastoise", class="fix-toggle")),
                div(actionButton("find_match", "Go")))),
     column(1, style='padding:2px',
-           actionButton("most_similar2",
-                        "", icon=icon("angle-double-up"), width='100%',
-                        style='font-size:10pt; padding:2px; margin:0px; color:white; background-color:rgb(51,122,183); border-color:white'),
-           br(),
-           actionButton("next_similar2",
-                        "", icon=icon("angle-up"), width='100%',
-                        style='font-size:10pt; padding:0px; margin-top:-4px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
-           br(),
-           actionButton("next_dissimilar2",
-                        "", icon=icon("angle-down"), width='100%',
-                        style='font-size:10pt; padding:0px; margin-top:-6px; color:white; background-color:rgb(120, 180, 240); border-color:white'),
-           br(),
-           actionButton("most_dissimilar2",
-                        "", icon=icon("angle-double-down"), width='100%',
-                        style='font-size:10pt; padding:2px; margin-top:-4px; color:white; background-color:rgb(51,122,183); border-color:white')),
+           div(class="nav-btn-group",
+               actionButton("most_similar2", "", icon=icon("angle-double-up"),
+                            style='color:white; background-color:rgb(51,122,183)'),
+               actionButton("next_similar2", "", icon=icon("angle-up"),
+                            style='color:white; background-color:rgb(120,180,240)'),
+               actionButton("next_dissimilar2", "", icon=icon("angle-down"),
+                            style='color:white; background-color:rgb(120,180,240)'),
+               actionButton("most_dissimilar2", "", icon=icon("angle-double-down"),
+                            style='color:white; background-color:rgb(51,122,183)'))),
     column(4, align="center",
            selectizeInput("pokemon2", NULL, table$Name, selected="Blastoise",
                           options=list(render=dropdown_render)),
@@ -464,6 +493,11 @@ server <- function(input, output, session) {
       options = list(
         dom='t',
         pageLength = 14,
+        autoWidth = FALSE,
+        columnDefs = list(
+          list(width = '55px', targets = c(0, 2)),
+          list(width = '50px', targets = 1)
+        ),
         rowCallback = JS(rowCallback)
         )
     ) %>% formatStyle(
