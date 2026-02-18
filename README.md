@@ -1,98 +1,101 @@
-# Similarity Tool
+# Pokémon Similarity Tool
 
-#### Link: [https://epgreig.shinyapps.io/similarity-tool/](https://epgreig.shinyapps.io/similarity-tool/?_ga=2.21943161.313882230.1588985783-2134019159.1588985783)
-This is a calculator which outputs a similarity score between two selected Pokemon. To visualize the results of this calculator I also created a web app, built from scratch using R Shiny.
+#### [https://epgreig.shinyapps.io/similarity-tool/](https://epgreig.shinyapps.io/similarity-tool/)
 
-The link above is to the web app hosted on shinyapps.io (free account, 25 hours of usage per month). Alternatively, you can clone this repo, open the App.R file in R Studio with the codebase directory as your working directory and click "Run App".
+An interactive calculator that computes a similarity score between any two Pokémon, built from scratch as an R Shiny web app. Select any pair from all 1,182 included Pokémon and instantly see how alike they are — plus a stat-by-stat comparison grid, navigation buttons to explore neighbors in similarity space, and the ability to search for a target similarity percentage.
 
-## Inspiration
+The app is hosted on shinyapps.io at the link above. Alternatively, you can clone this repo and run it locally:
 
-I was inspired by Dom Luszczyszyn's article in The Athletic called "By the numbers: Finding the NHL's most unique players" (https://theathletic.com/1761077/2020/04/21/by-the-numbers-finding-the-nhls-most-unique-players/). In this article, he calculated similarity scores between all NHL players using age, size, and various usage stats to represent offensive and defensive prowess. He defined the most unique players to the the ones who that the lowest similarity score with their respective closest match. These players were:
+```bash
+Rscript -e 'shiny::runApp("app.R")'
+```
 
-- John Carlson (one-dimensional, elite offensive production)
-- Zdeno Chara (tall, 42, and still effective)  
-- Alex Ovechkin (true-talent 50-goal scorer – at any age)
+## Pokémon Similarity Calculator
 
-## Pokemon Similarity Calculator
+#### Eligible Pokémon
+- Generations 1–9 (Kanto through Paldea), all evolutionary stages
+- 1,182 Pokémon total, including:
+  - Mega Evolutions and Primal forms
+  - Regional forms (Alola, Galar, Hisui, Paldea)
+  - Alternate forms with different stats or types (e.g. Deoxys forms, Rotom appliances, Aegislash-Blade)
+- Excludes Gigantamax, Totem, and cosmetic-only forms
 
-#### Eligible Pokemon
-- First 8 Generations of Pokemon
-- Fully-Evolved Pokemon Only
-- Includes Megas and alternate forms if stats are different
-- No Gigantamax Forms
-
-#### Features
-- Type(s)
-- Base Stats (Health, Attack, Defense, Sp.Attack, Sp. Defense, Speed)
-- Height and Weight
-- Egg Group
-- Base Happiness
-- Gender Ratio
-- Catch Rate (lower Catch Rate => More difficult to capture)
+#### Features (45 dimensions)
+- Base Stats: HP, Attack, Defense, Sp. Attack, Sp. Defense, Speed (6)
+- Type(s): one-hot encoded across 18 types (18)
+- Egg Group(s): one-hot encoded across 14 groups (14)
+- Gender: Male Dominant, Female Dominant, Genderless (3)
+- Height and Weight (2)
+- Base Happiness and Catch Rate (2)
 
 ## Methodology
 
 #### Data Sources
-- Data: https://www.kaggle.com/mrdew25/pokemon-database
-- Images: https://www.kaggle.com/kvpratama/pokemon-images-dataset (Gen 1-6), https://www.kaggle.com/adityamhatre/pokemon-transparent-images-dataset (Gen 7), https://projectpokemon.org/docs/spriteindex_148/home-sprites-gen-8-r135/ (Gen 8)
+- **Data:** [PokeAPI CSV data dump](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv) — 14 raw CSV files joined by `build_pokemon_data.py` into a single `pokemon_data.csv`
+- **Images:** [PokeAPI sprites repo](https://github.com/PokeAPI/sprites), official artwork (`sprites/pokemon/other/official-artwork/`)
 
 #### Data Processing
-- One-hot encoding Type data (treating Primary and Secondary Types as equivalent)
-- One-hot encoding Egg Group data (treating Primary and Secondary Egg Groups as equivalent)
-- One-hot encoding Gender ratios into three binary variables: Male/Female Dominant (if gender ratio skews toward one or the other) or Genderless
-- Standardize all features: centering on the <ins>median</ins>, and with standard deviation of 1 for the six Stat features, 1/3 for the Type and Egg Group features, and 1/3 for the remaining features (I want to weigh the Base Stats of the pokemon more than anything else for similarity)
-- Note: the one-hot encoded Type features were scaled together so that the rarity of a type was not considered in similarity (e.g. Fairy is more rare than Water but I want to consider them equally dissimilar from any other type). This was also done for Egg Groups.
-- Similarity between 2 pkmn: Cosine of the angle between their corresponding 45-dimensional vectors
+1. One-hot encode Type data (Primary and Secondary Types treated equivalently, producing 18 binary columns)
+2. One-hot encode Egg Group data (Primary and Secondary Egg Groups treated equivalently, producing 14 binary columns)
+3. Encode Gender Ratios into three binary variables: Male Dominant, Female Dominant, or Genderless
+4. Center all features on the median and scale by standard deviation
+5. Apply feature weighting: Base Stats at full weight (1x), all other features at 1/3x
+6. Type features share a pooled standard deviation (so rarity of a type doesn't affect similarity — Fairy and Water are equally dissimilar from any other type). Same for Egg Groups.
+7. Compute cosine similarity between each pair's 45-dimensional feature vector
 
-#### Reasons for using Cosine similarity
-- Robust to extreme features (e.g. some Pokemon had features with z-scores as high as 9, and these features skewed distance metrics like Euclidean or Manhattan Distance)
-- Captures the essence of the pkmn rather than the scale of their features
+#### Why Cosine Similarity?
+- Robust to extreme features (some Pokémon have z-scores as high as 9, which skew distance metrics like Euclidean or Manhattan)
+- Captures the character of a Pokémon rather than the raw scale of its stats
 
-**No Machine Learning necessary! This is not a clustering problem, there is no reason to introduce ML into this problem when other statistical methods work perfectly well.
-
+**No machine learning necessary!** This is not a clustering problem — cosine similarity on well-chosen features works perfectly.
 
 ## Results
 
-**Most Similar Pokemon Pairs**
+**Most Similar Pokémon Pairs**
 
-1. Lycanroc and Lycanroc-Dusk: 99.9%
-2. Purugly and Cinccino: 98.4%
-3. Hitmonchan and Hitmontop: 97.8%
-4. Plusle and Minun: 97.6%
-5. Gourgeist and Gourgeist-Small: 97.6%
-6. Furret and Linoone: 97.4%
+1. Piplup and Popplio: 99.8%
+2. Zigzagoon and Bunnelby: 99.6%
+3. Pidgey and Fletchling: 99.6%
+4. Pumpkaboo-Large and Pumpkaboo-Super: 99.5%
+5. Spearow and Starly: 99.5%
+6. Machop and Timburr: 99.2%
 
-**Most Similar Pokemon Pairs Who Don't Share a Type**
+**Most Similar Pokémon Who Don't Share a Type**
 
-1. Darmanitan (Fire type) and Darmanitan-Galar (Ice type): 89.3%
-2. Zacian (Fairy) and Zamazenta (Fighting): 89.2%
-2. Deoxys-Attack (Psychic) and Pheromosa (Bug/Fighting): 89.2%
+1. Zacian (Fairy) and Zamazenta (Fighting): 91.5%
+2. Deoxys-Attack (Psychic) and Pheromosa (Bug/Fighting): 88.6%
 
+**Most Dissimilar Pokémon Pairs**
 
-**Most Dissimilar Pokemon Pairs**
+1. Wynaut and Diancie-Mega: -69.5%
+2. Mewtwo-Mega X and Kricketot: -67.8%
+3. Metapod and Mewtwo-Mega X: -67.3%
+4. Mewtwo-Mega Y and Cascoon: -67.1%
 
-1. Shuckle and Deoxys-Attack: -72.3%
-2. Deoxys-Attack and Pyukumuku: -71.8%
-3. Pyukumuku and Pheromosa: -71.0%
-4. Mewtwo-Mega-X and Smeargle: -68.0%
+**Most Unique Pokémon** (lowest similarity score with closest match)
 
-**Most Unique Pokemon** (measured by lowest similarity score for closest match)
+1. Castform: closest match 61.1% w/ Audino
+2. Nidoqueen: closest match 62.2% w/ Cresselia
+3. Poipole: closest match 66.3% w/ Munkidori
 
-1. Nidoqueen: closest match 54.4% w/ Nidoking
-2. Decidueye: closest match 55.8% w/ Dhelmise
-3. Garbodor: closest match 57.9% w/ Solrock
+**Least Unique Pokémon** (highest similarity score with furthest match)
 
-**Least Unique Pokemon** (measured by highest similarity score for furthest match)
+1. Zweilous: furthest match -0.4% w/ Electrode
+2. Castform: furthest match -1.8% w/ Steelix-Mega
+3. Poipole: furthest match -5.3% w/ Steelix-Mega
 
-1. Phione: furthest match -3.8% w/ Rayquaza-Mega
-2. Flygon: furthest match -7.5% w/ Pincurchin
-3. Glalie: furthest match -7.5% w/ Diancie-Mega
- 
-**Most Generic Pokemon** (measure by highest average similarity score with all other Pokemon)
+**Most Generic Pokémon** (highest average similarity with all other Pokémon)
 
-1. Samurott: average match 23.6%
+1. Golduck: average 24.8%
+2. Stantler: average 24.4%
+3. Dewott: average 24.1%
 
-**Least Generic Pokemon** (measure by lowest average similarity score with all other Pokemon)
+**Least Generic Pokémon** (lowest average similarity with all other Pokémon)
 
-1. Shedinja: average match 1.7%
+1. Chansey: average 2.8%
+2. Happiny: average 3.2%
+3. Blissey: average 4.1%
 
+## Inspiration
+
+Inspired by Dom Luszczyszyn's article in The Athletic, ["By the numbers: Finding the NHL's most unique players"](https://theathletic.com/1761077/2020/04/21/by-the-numbers-finding-the-nhls-most-unique-players/). He calculated similarity scores between all NHL players using age, size, and various usage stats, then defined the most unique players as those with the lowest similarity to their closest match.
