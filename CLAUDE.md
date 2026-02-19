@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A Pokemon Similarity Calculator built in R Shiny. It computes cosine similarity across ~45 dimensions (stats, types, egg groups, size, gender, happiness, catch rate) for 1182 Pokemon (Gen 1-9, all evolutionary stages, plus alternate forms). Deployed on ShinyApps.io.
+A Pokemon Similarity Calculator built in R Shiny. It computes cosine similarity across ~45 dimensions (stats, types, egg groups, size, gender, happiness, catch rate) for 1238 Pokemon (Gen 1-9, all evolutionary stages, plus alternate forms). Deployed on ShinyApps.io.
 
 ## Architecture & Data Flow
 
@@ -30,7 +30,7 @@ pokeapi_data/*.csv  -->  build_pokemon_data.py  -->  pokemon_data.csv
 | File | Role |
 |------|------|
 | `build_pokemon_data.py` | Joins PokeAPI CSVs into `pokemon_data.csv`. Python 3, no dependencies beyond stdlib. |
-| `pokemon_data.csv` | Flat CSV with 1182 rows. Columns: Pokemon Id, Pokedex, Name, Height, Weight, types, stats, gender ratios, egg groups, etc. |
+| `pokemon_data.csv` | Flat CSV with 1238 rows. Columns: Pokemon Id, Pokedex, Name, Height, Weight, types, stats, gender ratios, egg groups, etc. |
 | `pokeapi_data/` | Raw CSV dump from [PokeAPI GitHub](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv). 14 files. |
 | `generate_similarity.R` | One-hot encodes types/egg groups, scales features, computes cosine similarity matrix. |
 | `conditional_formatting.R` | Builds JS rowCallback for color-coding the stat comparison grid. |
@@ -70,7 +70,7 @@ Rscript -e 'shiny::runApp("app.R")'
 ## Important Technical Notes
 
 - **R 4.0+ stringsAsFactors**: `generate_similarity.R` explicitly converts type/egg group columns to factors before calling `mltools::one_hot()`. Without this, one_hot produces empty column names.
-- **Server-side selectize**: With 1182 Pokemon, the dropdowns use `updateSelectizeInput(..., server=TRUE)` in the server function (not choices in UI) to avoid performance warnings.
+- **Server-side selectize**: With 1238 Pokemon, the dropdowns use `updateSelectizeInput(..., server=TRUE)` in the server function (not choices in UI) to avoid performance warnings.
 - **Image naming**: Uses `Pokemon Id` column (PokeAPI's pokemon_id), NOT the Pokedex number. This avoids collisions between base forms and alternate forms of the same species.
 - **Form inclusion logic**: Megas (mega/mega-x/mega-y/primal), regional forms, and forms with different stats/types are included. Gigantamax, totems, and cosmetic-only forms are excluded. See `should_include_form()` and `INCLUDED_FORMS_BY_IDENTIFIER` in `build_pokemon_data.py`.
 - **Display names**: `FORM_DISPLAY_NAMES` maps known form_identifiers to display suffixes. Unknown forms fall back to title-casing the pokemon identifier suffix (e.g. `garchomp-mega-z` becomes "Garchomp-Mega-Z").

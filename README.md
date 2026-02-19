@@ -2,7 +2,7 @@
 
 #### [https://epgreig.shinyapps.io/similarity-tool/](https://epgreig.shinyapps.io/similarity-tool/)
 
-An interactive calculator that computes a similarity score between any two Pokémon, built from scratch as an R Shiny web app. Select any pair from all 1,182 included Pokémon and instantly see how alike they are — plus a stat-by-stat comparison grid, navigation buttons to explore neighbors in similarity space, and the ability to search for a target similarity percentage.
+An interactive calculator that computes a similarity score between any two Pokémon, built from scratch as an R Shiny web app. Select any pair from all 1,238 included Pokémon and instantly see how alike they are — plus a stat-by-stat comparison grid, navigation buttons to explore neighbors in similarity space, and the ability to search for a target similarity percentage.
 
 The app is hosted on shinyapps.io at the link above. Alternatively, you can clone this repo and run it locally:
 
@@ -14,7 +14,7 @@ Rscript -e 'shiny::runApp("app.R")'
 
 #### Eligible Pokémon
 - Generations 1–9 (Kanto through Paldea), all evolutionary stages
-- 1,182 Pokémon total, including:
+- 1,238 Pokémon total, including:
   - Mega Evolutions and Primal forms
   - Regional forms (Alola, Galar, Hisui, Paldea)
   - Alternate forms with different stats or types (e.g. Deoxys forms, Rotom appliances, Aegislash-Blade)
@@ -51,50 +51,55 @@ Rscript -e 'shiny::runApp("app.R")'
 
 ## Results
 
+*One entry per evolutionary line; different species only for pairs.*
+
 **Most Similar Pokémon Pairs**
 
-1. Piplup and Popplio: 99.8%
-2. Zigzagoon and Bunnelby: 99.6%
-3. Pidgey and Fletchling: 99.6%
-4. Pumpkaboo-Large and Pumpkaboo-Super: 99.5%
-5. Spearow and Starly: 99.5%
-6. Machop and Timburr: 99.2%
+1. Silcoon and Cascoon: 100.0%
+2. Piplup and Popplio: 99.8%
+3. Zigzagoon and Bunnelby: 99.6%
+4. Metapod and Spewpa: 99.6%
+5. Pidgey and Fletchling: 99.6%
 
 **Most Similar Pokémon Who Don't Share a Type**
 
-1. Zacian (Fairy) and Zamazenta (Fighting): 91.5%
-2. Deoxys-Attack (Psychic) and Pheromosa (Bug/Fighting): 88.6%
+1. Zacian (Fairy) and Zamazenta (Fighting): 91.4%
+2. Darkrai-Mega (Dark) and Magearna-Mega (Steel/Fairy): 88.7%
+3. Deoxys-Attack (Psychic) and Pheromosa (Bug/Fighting): 88.2%
+4. Mewtwo-Mega Y (Psychic) and Zeraora-Mega (Electric): 88.0%
+5. Xerneas (Fairy) and Yveltal (Dark/Flying): 87.8%
 
 **Most Dissimilar Pokémon Pairs**
 
-1. Wynaut and Diancie-Mega: -69.5%
-2. Mewtwo-Mega X and Kricketot: -67.8%
-3. Metapod and Mewtwo-Mega X: -67.3%
-4. Mewtwo-Mega Y and Cascoon: -67.1%
+1. Wynaut and Diancie-Mega: -69.7%
+2. Sunkern and Arceus: -69.0%
+3. Mewtwo-Mega X and Kricketot: -68.3%
+4. Pichu and Terapagos-Stellar: -66.5%
+5. Tyranitar-Mega and Wishiwashi-Solo: -66.1%
 
-**Most Unique Pokémon** (lowest similarity score with closest match)
+**Most Unique Pokémon** (lowest similarity with closest match)
 
-1. Castform: closest match 61.1% w/ Audino
-2. Nidoqueen: closest match 62.2% w/ Cresselia
-3. Poipole: closest match 66.3% w/ Munkidori
+1. Castform: closest match 61.5% w/ Audino
+2. Nidoqueen: closest match 62.1% w/ Cresselia
+3. Poipole: closest match 64.5% w/ Munkidori
+4. Aegislash-Blade: closest match 67.5% w/ Blacephalon
+5. Mimikyu-Disguised: closest match 68.3% w/ Misdreavus
 
-**Least Unique Pokémon** (highest similarity score with furthest match)
+**Most Generic Pokémon** (highest average similarity)
 
-1. Zweilous: furthest match -0.4% w/ Electrode
-2. Castform: furthest match -1.8% w/ Steelix-Mega
-3. Poipole: furthest match -5.3% w/ Steelix-Mega
+1. Golduck: average 24.3%
+2. Stantler: average 23.9%
+3. Watchog: average 23.7%
+4. Dewott: average 23.6%
+5. Dubwool: average 23.6%
 
-**Most Generic Pokémon** (highest average similarity with all other Pokémon)
+**Least Generic Pokémon** (lowest average similarity)
 
-1. Golduck: average 24.8%
-2. Stantler: average 24.4%
-3. Dewott: average 24.1%
-
-**Least Generic Pokémon** (lowest average similarity with all other Pokémon)
-
-1. Chansey: average 2.8%
-2. Happiny: average 3.2%
-3. Blissey: average 4.1%
+1. Chansey: average 3.1%
+2. Wishiwashi-Solo: average 4.3%
+3. Pichu: average 4.8%
+4. Cleffa: average 5.2%
+5. Wobbuffet: average 5.4%
 
 ## Inspiration
 

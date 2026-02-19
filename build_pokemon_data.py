@@ -235,10 +235,12 @@ def main():
     for row in egg_group_rows:
         egg_groups[int(row["species_id"])].append(int(row["egg_group_id"]))
 
-    # Forms: pokemon_id -> form row
+    # Forms: pokemon_id -> form row (prefer is_default=1 when multiple rows share a pokemon_id)
     forms = {}
     for row in forms_rows:
-        forms[int(row["pokemon_id"])] = row
+        pid = int(row["pokemon_id"])
+        if pid not in forms or row["is_default"] == "1":
+            forms[pid] = row
 
     # Type ID -> name
     type_names = {
@@ -264,7 +266,8 @@ def main():
         is_battle_only = form_row.get("is_battle_only", "0")
         is_mega = form_row.get("is_mega", "0")
 
-        if not should_include_form(form_identifier, is_battle_only, is_mega):
+        # Species default pokemon entries are always included; only filter alternate forms
+        if poke_row["is_default"] != "1" and not should_include_form(form_identifier, is_battle_only, is_mega):
             skipped_forms.append(f"  skip: {poke_row['identifier']} (form: {form_identifier})")
             continue
 
@@ -331,6 +334,11 @@ def main():
         else:
             region = GEN_REGION.get(gen_id, f"gen-{gen_id}")
 
+        # Skip Pokemon with no type data (catches unreleased/incomplete entries)
+        if not primary_type:
+            skipped_forms.append(f"  skip: {poke_row['identifier']} (no type data)")
+            continue
+
         row = {
             "Pokemon Id": poke_id,
             "Pokedex": species_id,
@@ -354,7 +362,6 @@ def main():
             "Primary Egg Group": primary_egg,
             "Secondary Egg Group": secondary_egg,
         }
-
 
         output.append(row)
 
