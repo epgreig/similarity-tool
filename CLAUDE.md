@@ -56,8 +56,8 @@ Sourced from the [PokeAPI sprites repo](https://github.com/PokeAPI/sprites) (`sp
 # 1. Build pokemon_data.csv from raw CSVs
 python3 build_pokemon_data.py
 
-# 2. Test the R pipeline
-Rscript -e 'source("prepare_app_data.R"); cat("OK:", nrow(table), "Pokemon\n")'
+# 2. Validate the data and similarity pipeline (exits non-zero on failure)
+Rscript validate_data.R
 
 # 3. Run the app
 Rscript -e 'shiny::runApp("app.R")'
