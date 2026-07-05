@@ -431,12 +431,12 @@ server <- function(input, output, session) {
 
   get_index1 <- reactive({
     id <- which(table$Name == input$pokemon1)
-    if (length(id) == 0) { id <- 3 }
+    if (length(id) == 0) { id <- which(table$Name == "Charizard") }
     return(id)
     })
   get_index2 <- reactive({
     id <- which(table$Name == input$pokemon2)
-    if (length(id) == 0) { id <- 6 }
+    if (length(id) == 0) { id <- which(table$Name == "Blastoise") }
     return(id)})
 
   output$similarity <- renderText({ paste0(100*round(cosine_scores[get_index1(), get_index2()], digits=2), "%") })

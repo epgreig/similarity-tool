@@ -163,7 +163,7 @@ def load_csv(filename):
         return list(csv.DictReader(f))
 
 
-def should_include_form(form_identifier, is_battle_only, is_mega):
+def should_include_form(form_identifier, is_mega):
     """Decide if an alternate form should be included in the dataset."""
     if not form_identifier:
         return True  # Default form, always include
@@ -263,11 +263,10 @@ def main():
         # Check form inclusion
         form_row = forms.get(poke_id, {})
         form_identifier = form_row.get("form_identifier", "")
-        is_battle_only = form_row.get("is_battle_only", "0")
         is_mega = form_row.get("is_mega", "0")
 
         # Species default pokemon entries are always included; only filter alternate forms
-        if poke_row["is_default"] != "1" and not should_include_form(form_identifier, is_battle_only, is_mega):
+        if poke_row["is_default"] != "1" and not should_include_form(form_identifier, is_mega):
             skipped_forms.append(f"  skip: {poke_row['identifier']} (form: {form_identifier})")
             continue
 

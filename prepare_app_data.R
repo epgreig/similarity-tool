@@ -8,8 +8,7 @@ diag(cosine_scores) <- 1
 data <- read.csv('pokemon_data.csv')
 data <- data.table(data)
 
-# Replace Undiscovered Egg Group with Unknown
-levels(data$Primary.Egg.Group) <- c(levels(data$Primary.Egg.Group), "Unknown")
+# Replace Undiscovered Egg Group with Unknown (column is character since R 4.0)
 data$Primary.Egg.Group[data$Primary.Egg.Group=="Undiscovered"] <- "Unknown"
 
 # Define function for Gender description
