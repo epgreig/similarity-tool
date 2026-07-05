@@ -88,7 +88,7 @@ sim <- table_numeric / sqrt(rowSums(table_numeric * table_numeric))
 cosine_scores <- as.matrix(sim) %*% t(as.matrix(sim))
 
 # Get Image Names (use Pokemon.Id directly — unique, no collision)
-table$Image.Name <- paste0("images/", table$Pokemon.Id, ".png")
+table$Image.Name <- paste0("docs/images/", table$Pokemon.Id, ".png")
 
 # Attach full similarity rankings for each row
 table_with_scores <- cbind(table, t(apply(cosine_scores, 1, order, decreasing=TRUE)))

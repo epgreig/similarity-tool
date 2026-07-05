@@ -2,8 +2,10 @@ library('shiny')
 library('shinyBS')
 library('DT')
 
-source('conditional_formatting.R')
+# Order matters: prepare_app_data.R runs the similarity pipeline once;
+# conditional_formatting.R reuses its globals instead of re-running it.
 source('prepare_app_data.R')
+source('conditional_formatting.R')
 
 # Build JS lookups for Pokedex numbers and generation
 safe_names <- gsub('"', '\\"', table$Name, fixed=TRUE)

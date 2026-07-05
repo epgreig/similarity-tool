@@ -36,7 +36,7 @@ if (any(raw$`Primary Type` == "" | is.na(raw$`Primary Type`))) fail("row with mi
 pass("every row has a Primary Type")
 
 # --- sprites ---
-expected_images <- paste0("images/", raw$`Pokemon Id`, ".png")
+expected_images <- paste0("docs/images/", raw$`Pokemon Id`, ".png")
 missing <- expected_images[!file.exists(expected_images)]
 if (length(missing) > 0) fail(length(missing), " missing sprites: ", paste(head(missing, 5), collapse = ", "))
 pass("a sprite exists for every Pokemon Id")

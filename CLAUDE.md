@@ -36,7 +36,8 @@ pokeapi_data/*.csv  -->  build_pokemon_data.py  -->  pokemon_data.csv
 | `conditional_formatting.R` | Builds JS rowCallback for color-coding the stat comparison grid. |
 | `prepare_app_data.R` | Sources generate_similarity.R, builds grid_data matrix and similarity rankings. |
 | `app.R` | Shiny app. Two dropdowns, two images, stat grid, similarity percentage, navigation buttons. |
-| `images/` | Sprites named by pokemon_id (e.g. `25.png` for Pikachu, `10034.png` for Charizard-Mega X). |
+| `docs/images/` | Sprites named by pokemon_id (e.g. `25.png` for Pikachu, `10034.png` for Charizard-Mega X). |
+| `build_artifacts.R` | Runs the pipeline once and exports static-site data artifacts to `docs/data/`. |
 
 ## Data Source
 
@@ -46,7 +47,7 @@ The CSVs were downloaded from `https://github.com/PokeAPI/pokeapi/tree/master/da
 
 ## Sprites
 
-Sourced from the [PokeAPI sprites repo](https://github.com/PokeAPI/sprites) (`sprites/pokemon/other/official-artwork/`). Downloaded via sparse git checkout into `pokeapi_sprites/` (gitignored), then copied to `images/{pokemon_id}.png`.
+Sourced from the [PokeAPI sprites repo](https://github.com/PokeAPI/sprites) (`sprites/pokemon/other/official-artwork/`). Downloaded via sparse git checkout into `pokeapi_sprites/` (gitignored), then copied to `docs/images/{pokemon_id}.png`.
 
 4 sprites are gray placeholders (unreleased Legends Z-A megas): 10309, 10318, 10322, 10323.
 

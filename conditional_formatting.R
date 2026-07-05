@@ -1,7 +1,7 @@
+# Expects the globals from generate_similarity.R (features_stats, features_size)
+# to already exist — app.R sources prepare_app_data.R first.
 library('shiny')
 library('DT')
-
-source('generate_similarity.R')
 
 data <- read.csv('pokemon_data.csv')
 data <- data.table(data)
