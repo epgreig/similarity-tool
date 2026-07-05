@@ -4,3 +4,5 @@
 .venv/
 pokeapi_sprites/
 sprite_mapping.csv
+Claude_transcript.rtf
+.claude/
