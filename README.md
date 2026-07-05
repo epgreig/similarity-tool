@@ -41,7 +41,8 @@ Rscript -e 'shiny::runApp("app.R")'
 4. Center all features on the median and scale by standard deviation
 5. Apply feature weighting: Base Stats at full weight (1x), all other features at 1/3x
 6. Type features share a pooled standard deviation (so rarity of a type doesn't affect similarity — Fairy and Water are equally dissimilar from any other type). Same for Egg Groups.
-7. Compute cosine similarity between each pair's 45-dimensional feature vector
+7. Append a constant dummy feature to every vector (gives all pairs a shared component, softening extreme negative similarities)
+8. Compute cosine similarity between each pair's feature vector
 
 #### Why Cosine Similarity?
 - Robust to extreme features (some Pokémon have z-scores as high as 9, which skew distance metrics like Euclidean or Manhattan)

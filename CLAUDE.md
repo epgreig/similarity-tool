@@ -70,12 +70,13 @@ Rscript -e 'shiny::runApp("app.R")'
 ## Important Technical Notes
 
 - **R 4.0+ stringsAsFactors**: `generate_similarity.R` explicitly converts type/egg group columns to factors before calling `mltools::one_hot()`. Without this, one_hot produces empty column names.
-- **Server-side selectize**: With 1238 Pokemon, the dropdowns use `updateSelectizeInput(..., server=TRUE)` in the server function (not choices in UI) to avoid performance warnings.
+- **Selectize dropdowns are client-side**: the full 1238-name choice list is passed directly in the UI definition (`selectizeInput(..., table$Name)`). `updateSelectizeInput()` is only used to change the selection, never to serve choices.
 - **Image naming**: Uses `Pokemon Id` column (PokeAPI's pokemon_id), NOT the Pokedex number. This avoids collisions between base forms and alternate forms of the same species.
 - **Form inclusion logic**: Megas (mega/mega-x/mega-y/primal), regional forms, and forms with different stats/types are included. Gigantamax, totems, and cosmetic-only forms are excluded. See `should_include_form()` and `INCLUDED_FORMS_BY_IDENTIFIER` in `build_pokemon_data.py`.
 - **Display names**: `FORM_DISPLAY_NAMES` maps known form_identifiers to display suffixes. Unknown forms fall back to title-casing the pokemon identifier suffix (e.g. `garchomp-mega-z` becomes "Garchomp-Mega-Z").
 - **Hisui species**: Species 899-905 are Gen 8 in PokeAPI but region is overridden to "Hisui".
 - **prepare_app_data.R uses R's `$` partial matching**: `data$Health` matches `Health.Stat` column. This works because data.table inherits from data.frame for `$`.
+- **Constant column in the cosine computation**: `generate_similarity.R` appends a constant `1` to every feature vector (`cbind(table_numeric, 1)`) before computing cosine similarity. This gives all pairs a shared component, compressing scores upward and preventing strongly negative similarities. Scores are therefore not pure cosine over the 45 features — this is intentional tuning; don't remove it.
 
 ## What's NOT in the Repo
 
@@ -85,10 +86,11 @@ Rscript -e 'shiny::runApp("app.R")'
 
 ## Similarity Algorithm Summary
 
-1. One-hot encode types (18 types) and egg groups (15 groups) into binary columns
+1. One-hot encode types (18 types) and egg groups (14 groups — Undiscovered is dropped) into binary columns
 2. Combine primary + secondary into single set of type/egg group columns
 3. Create binary gender features (Male.Dominant, Female.Dominant, Genderless)
 4. Center all features by median, scale by standard deviation
 5. Types and egg groups share pooled standard deviations within their groups
-6. Weight: stats at 1x, types/egg groups at 1/3x, size/gender/misc at 1/9x
-7. Compute cosine similarity between all pairs
+6. Weight: stats at 1x, everything else (types, egg groups, size, gender, misc) at 1/3x
+7. Append a constant 1 feature to every vector (see Important Technical Notes)
+8. Compute cosine similarity between all pairs
