@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pokémon Similarity Tool</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='white' stroke='%232c3e50' stroke-width='4'/><path d='M2,50 H98' stroke='%232c3e50' stroke-width='4'/><circle cx='50' cy='50' r='14' fill='white' stroke='%232c3e50' stroke-width='4'/><circle cx='50' cy='50' r='6' fill='%232c3e50'/><path d='M2,50 A48,48 0 0,1 98,50' fill='%23e74c3c'/></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="loading">Loading Pokémon data…</div>
+
+  <div class="container" id="app" hidden>
+    <h3>Pokémon Similarity Tool</h3>
+
+    <div class="controls-row">
+      <div class="col-select">
+        <div class="select-wrap" id="select1"></div>
+        <button class="btn-random" id="random1" title="Randomize" aria-label="Randomize left Pokémon">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M17 3l4 4-4 4V8h-2.6l-2.2 3-1.8-2.5L12.9 6H17V3zM3 6h5.1l7.3 10H17v-3l4 4-4 4v-3h-3.1L6.6 8H3V6zm6.1 7.5l1.8 2.5-1.5 2H3v-2h4.6l1.5-2.5z"/></svg>
+        </button>
+      </div>
+
+      <div class="col-nav">
+        <div class="nav-btn-group">
+          <button class="nav-btn dark" id="most_similar1"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 12 5 19 12"/><polyline points="5 19 12 12 19 19"/></svg></button>
+          <button class="nav-btn light" id="next_similar1"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 15 12 8 19 15"/></svg></button>
+          <button class="nav-btn light" id="next_dissimilar1"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 12 16 19 9"/></svg></button>
+          <button class="nav-btn dark" id="most_dissimilar1"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 12 19 19 12"/><polyline points="5 5 12 12 19 5"/></svg></button>
+        </div>
+      </div>
+
+      <div class="col-badge">
+        <div id="similarity-display" class="similarity-badge"><span id="similarity"></span></div>
+        <div id="similarity-edit" hidden>
+          <div class="similarity-badge edit-badge">
+            <input id="target_score" class="score-input" type="text" placeholder="85" maxlength="4">
+            <span class="score-suffix">%</span>
+          </div>
+          <div class="fix-label">Find match for:</div>
+          <div>
+            <button id="fix_left" class="fix-toggle fix-active"></button>
+            <button id="fix_right" class="fix-toggle"></button>
+          </div>
+          <div><button id="find_match">Go</button></div>
+        </div>
+      </div>
+
+      <div class="col-nav">
+        <div class="nav-btn-group">
+          <button class="nav-btn dark" id="most_similar2"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 12 5 19 12"/><polyline points="5 19 12 12 19 19"/></svg></button>
+          <button class="nav-btn light" id="next_similar2"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 15 12 8 19 15"/></svg></button>
+          <button class="nav-btn light" id="next_dissimilar2"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 12 16 19 9"/></svg></button>
+          <button class="nav-btn dark" id="most_dissimilar2"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 12 19 19 12"/><polyline points="5 5 12 12 19 5"/></svg></button>
+        </div>
+      </div>
+
+      <div class="col-select">
+        <div class="select-wrap" id="select2"></div>
+        <button class="btn-random" id="random2" title="Randomize" aria-label="Randomize right Pokémon">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M17 3l4 4-4 4V8h-2.6l-2.2 3-1.8-2.5L12.9 6H17V3zM3 6h5.1l7.3 10H17v-3l4 4-4 4v-3h-3.1L6.6 8H3V6zm6.1 7.5l1.8 2.5-1.5 2H3v-2h4.6l1.5-2.5z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="display-row">
+      <div class="col-image">
+        <div class="pokemon-image"><img id="image1" width="300" height="300" alt=""></div>
+      </div>
+      <div class="col-grid">
+        <table id="grid"></table>
+      </div>
+      <div class="col-image">
+        <div class="pokemon-image"><img id="image2" width="300" height="300" alt=""></div>
+      </div>
+    </div>
+
+    <div class="footer-row">
+      <label class="scale-label"><input type="checkbox" id="scale_images"> Scale Images by Height</label>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

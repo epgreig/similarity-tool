@@ -41,7 +41,9 @@ pokemon <- data.frame(
   weight    = data$Weight,
   type1     = data$Primary.Type,
   type2     = data$Secondary.Type,
-  egg1      = data$Primary.Egg.Group,   # Undiscovered already renamed Unknown
+  # conditional_formatting.R re-reads the CSV over prepare_app_data.R's
+  # globals, so apply the Undiscovered -> Unknown rename here ourselves
+  egg1      = sub("^Undiscovered$", "Unknown", data$Primary.Egg.Group),
   egg2      = data$Secondary.Egg.Group,
   maleRatio   = data$Male.Ratio,
   femaleRatio = data$Female.Ratio,
