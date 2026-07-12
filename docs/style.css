@@ -1,5 +1,7 @@
 * { box-sizing: border-box; }
 
+[hidden] { display: none !important; }
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: #f0f2f5;
