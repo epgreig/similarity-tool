@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A Pokemon Similarity Calculator built in R Shiny. It computes cosine similarity across ~45 dimensions (stats, types, egg groups, size, gender, happiness, catch rate) for 1238 Pokemon (Gen 1-9, all evolutionary stages, plus alternate forms). Deployed on ShinyApps.io.
+A Pokemon Similarity Calculator. An offline R pipeline computes cosine similarity across ~45 dimensions (stats, types, egg groups, size, gender, happiness, catch rate) for 1238 Pokemon (Gen 1-9, all evolutionary stages, plus alternate forms) and exports precomputed artifacts; a zero-dependency static site in `docs/` renders them. Deployed on GitHub Pages at https://epgreig.github.io/similarity-tool/ (served from `master:/docs`).
 
 ## Architecture & Data Flow
 
@@ -14,15 +14,11 @@ pokeapi_data/*.csv  -->  build_pokemon_data.py  -->  pokemon_data.csv
                                                     (one-hot encoding, scaling, cosine similarity)
                                                           |
                                                           v
-                                              conditional_formatting.R
-                                                (color breakpoints for stat grid)
+                                                   build_artifacts.R
+                                              (exports docs/data/ artifacts)
                                                           |
                                                           v
-                                                  prepare_app_data.R
-                                                    (grid display data, similarity rankings)
-                                                          |
-                                                          v
-                                                      app.R  (Shiny UI/server)
+                            docs/  (static site: index.html, app.js, style.css)
 ```
 
 ## Key Files
@@ -33,11 +29,13 @@ pokeapi_data/*.csv  -->  build_pokemon_data.py  -->  pokemon_data.csv
 | `pokemon_data.csv` | Flat CSV with 1238 rows. Columns: Pokemon Id, Pokedex, Name, Height, Weight, types, stats, gender ratios, egg groups, etc. |
 | `pokeapi_data/` | Raw CSV dump from [PokeAPI GitHub](https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv). 14 files. |
 | `generate_similarity.R` | One-hot encodes types/egg groups, scales features, computes cosine similarity matrix. |
-| `conditional_formatting.R` | Builds JS rowCallback for color-coding the stat comparison grid. |
-| `prepare_app_data.R` | Sources generate_similarity.R, builds grid_data matrix and similarity rankings. |
-| `app.R` | Shiny app. Two dropdowns, two images, stat grid, similarity percentage, navigation buttons. |
+| `build_artifacts.R` | Sources generate_similarity.R and exports the static-site data artifacts to `docs/data/`. |
+| `validate_data.R` | Post-rebuild sanity checks (CSV integrity, sprites present, matrix properties). |
+| `docs/index.html`, `docs/app.js`, `docs/style.css` | The static frontend. Vanilla JS, no framework, no build step. |
+| `docs/data/similarity_i16.bin` | Scores ×10000 as little-endian int16, row-major over pokemon.json order. |
+| `docs/data/pokemon.json` | One object per Pokemon, same order as the similarity matrix rows. |
+| `docs/data/breakpoints.json` | 40 grid colors + 39 cuts per colored stat row. |
 | `docs/images/` | Sprites named by pokemon_id (e.g. `25.png` for Pikachu, `10034.png` for Charizard-Mega X). |
-| `build_artifacts.R` | Runs the pipeline once and exports static-site data artifacts to `docs/data/`. |
 
 ## Data Source
 
@@ -60,24 +58,31 @@ python3 build_pokemon_data.py
 # 2. Validate the data and similarity pipeline (exits non-zero on failure)
 Rscript validate_data.R
 
-# 3. Run the app
-Rscript -e 'shiny::runApp("app.R")'
+# 3. Export the static-site artifacts to docs/data/
+Rscript build_artifacts.R
+
+# 4. Serve the site locally
+python3 -m http.server 8000 --directory docs
 ```
 
-## R Dependencies
+Deployment is just `git push` — GitHub Pages serves `master:/docs` directly.
 
-`shiny`, `shinyBS`, `DT`, `data.table`, `mltools`
+## Dependencies
+
+- R (offline pipeline only): `data.table`, `mltools`, `jsonlite`
+- The deployed site has zero runtime dependencies.
 
 ## Important Technical Notes
 
 - **R 4.0+ stringsAsFactors**: `generate_similarity.R` explicitly converts type/egg group columns to factors before calling `mltools::one_hot()`. Without this, one_hot produces empty column names.
-- **Selectize dropdowns are client-side**: the full 1238-name choice list is passed directly in the UI definition (`selectizeInput(..., table$Name)`). `updateSelectizeInput()` is only used to change the selection, never to serve choices.
 - **Image naming**: Uses `Pokemon Id` column (PokeAPI's pokemon_id), NOT the Pokedex number. This avoids collisions between base forms and alternate forms of the same species.
 - **Form inclusion logic**: Megas (mega/mega-x/mega-y/primal), regional forms, and forms with different stats/types are included. Gigantamax, totems, and cosmetic-only forms are excluded. See `should_include_form()` and `INCLUDED_FORMS_BY_IDENTIFIER` in `build_pokemon_data.py`.
 - **Display names**: `FORM_DISPLAY_NAMES` maps known form_identifiers to display suffixes. Unknown forms fall back to title-casing the pokemon identifier suffix (e.g. `garchomp-mega-z` becomes "Garchomp-Mega-Z").
 - **Hisui species**: Species 899-905 are Gen 8 in PokeAPI but region is overridden to "Hisui".
-- **prepare_app_data.R uses R's `$` partial matching**: `data$Health` matches `Health.Stat` column. This works because data.table inherits from data.frame for `$`.
 - **Constant column in the cosine computation**: `generate_similarity.R` appends a constant `1` to every feature vector (`cbind(table_numeric, 1)`) before computing cosine similarity. This gives all pairs a shared component, compressing scores upward and preventing strongly negative similarities. Scores are therefore not pure cosine over the 45 features — this is intentional tuning; don't remove it.
+- **Artifact contract**: `pokemon.json` array order == similarity matrix row order. `score(i, j) = int16[i*N + j] / 10000`. The frontend (`docs/app.js`) computes rankings in-browser by sorting a row of the matrix; there is no precomputed rank data.
+- **Undiscovered egg group** is displayed as "Unknown"; the rename happens in `build_artifacts.R` when exporting `pokemon.json` (the similarity features drop the Undiscovered column entirely).
+- **History**: this was an R Shiny app (shinyapps.io) until July 2026. `app.R`, `prepare_app_data.R`, and `conditional_formatting.R` live in git history if ever needed.
 
 ## What's NOT in the Repo
 

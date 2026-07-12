@@ -1,13 +1,14 @@
 # Pokémon Similarity Tool
 
-#### [https://epgreig.shinyapps.io/similarity-tool/](https://epgreig.shinyapps.io/similarity-tool/)
+#### [https://epgreig.github.io/similarity-tool/](https://epgreig.github.io/similarity-tool/)
 
-An interactive calculator that computes a similarity score between any two Pokémon, built from scratch as an R Shiny web app. Select any pair from all 1,238 included Pokémon and instantly see how alike they are — plus a stat-by-stat comparison grid, navigation buttons to explore neighbors in similarity space, and the ability to search for a target similarity percentage.
+An interactive calculator that computes a similarity score between any two Pokémon. Select any pair from all 1,238 included Pokémon and instantly see how alike they are — plus a stat-by-stat comparison grid, navigation buttons to explore neighbors in similarity space, and the ability to search for a target similarity percentage.
 
-The app is hosted on shinyapps.io at the link above. Alternatively, you can clone this repo and run it locally:
+The similarity scores are precomputed offline by an R pipeline; the site itself is plain HTML/CSS/JS with no server component, hosted on GitHub Pages at the link above. To run it locally:
 
 ```bash
-Rscript -e 'shiny::runApp("app.R")'
+python3 -m http.server 8000 --directory docs
+# then open http://localhost:8000
 ```
 
 ## Pokémon Similarity Calculator
