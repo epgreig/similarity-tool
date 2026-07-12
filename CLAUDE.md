@@ -47,7 +47,7 @@ The CSVs were downloaded from `https://github.com/PokeAPI/pokeapi/tree/master/da
 
 Sourced from the [PokeAPI sprites repo](https://github.com/PokeAPI/sprites) (`sprites/pokemon/other/official-artwork/`). Downloaded via sparse git checkout into `pokeapi_sprites/` (gitignored), then copied to `docs/images/{pokemon_id}.png`.
 
-4 sprites are gray placeholders (unreleased Legends Z-A megas): 10309, 10318, 10322, 10323.
+4 sprites are 251-byte solid-gray placeholders — unreleased Legends Z-A megas with stats in PokeAPI's data dump but no official artwork yet: 10309 (Garchomp-Mega-Z), 10318 (Magearna-Original-Mega), 10322 (Tatsugiri-Curly-Mega), 10323 (Tatsugiri-Droopy-Mega). On the site these render as a plain gray square, which looks like a broken image but isn't. They'll be replaced by re-downloading sprites once the artwork lands in the PokeAPI sprites repo.
 
 ## How to Rebuild Everything
 
