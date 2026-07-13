@@ -3,6 +3,15 @@
 const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
 const IMG_SIZE = 300;
 
+const TYPE_COLORS = {
+  Normal: '#A8A878', Fighting: '#C03028', Flying: '#A890F0', Poison: '#A040A0',
+  Ground: '#E0C068', Rock: '#B8A038', Bug: '#A8B820', Ghost: '#705898',
+  Steel: '#B8B8D0', Fire: '#F08030', Water: '#6890F0', Grass: '#78C850',
+  Electric: '#F8D030', Psychic: '#F85888', Ice: '#98D8D8', Dragon: '#7038F8',
+  Dark: '#705848', Fairy: '#EE99AC',
+};
+const DARK_TEXT_TYPES = new Set(['Electric', 'Ice', 'Ground', 'Steel', 'Fairy']);
+
 let pokemon = [];        // docs/data/pokemon.json, same order as matrix rows
 let scores = null;       // Int16Array, score(i,j) = scores[i*N+j] / 10000
 let N = 0;
@@ -43,7 +52,7 @@ function colorFor(key, value) {
 }
 
 const GRID_ROWS = [
-  { label: 'Type',        text: (p) => p.type2 ? p.type1 + ',\n' + p.type2 : p.type1 },
+  { label: 'Type',        chips: (p) => [p.type1, p.type2].filter(Boolean) },
   { label: 'Health',      key: 'hp' },
   { label: 'Attack',      key: 'attack' },
   { label: 'Defense',     key: 'defense' },
@@ -152,7 +161,56 @@ function makeDropdown(containerId, getSelected, onSelect) {
 // --- rendering ---------------------------------------------------------------
 
 let dropdown1, dropdown2;
-let lastShownScore = null;
+let lastShownPct = null;
+let scoreAnim = null;
+
+// -70% (observed floor) -> red, 100% -> green
+function scoreColor(pct) {
+  const t = Math.max(0, Math.min(1, (pct + 70) / 170));
+  return 'hsl(' + Math.round(130 * t) + ', 62%, 38%)';
+}
+
+function showScore(pct) {
+  $('similarity').textContent = Math.round(pct) + '%';
+  $('similarity').style.color = scoreColor(pct);
+}
+
+function animateScore(toPct) {
+  if (scoreAnim) cancelAnimationFrame(scoreAnim);
+  if (lastShownPct === null) {
+    showScore(toPct);
+  } else {
+    const fromPct = lastShownPct;
+    const start = performance.now();
+    const dur = 400;
+    const tick = (now) => {
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      showScore(fromPct + (toPct - fromPct) * eased);
+      if (t < 1) scoreAnim = requestAnimationFrame(tick);
+    };
+    scoreAnim = requestAnimationFrame(tick);
+  }
+  lastShownPct = toPct;
+}
+
+function makeTypeChip(type) {
+  const chip = document.createElement('span');
+  chip.className = 'type-chip';
+  chip.textContent = type;
+  chip.style.backgroundColor = TYPE_COLORS[type] || '#888';
+  chip.style.color = DARK_TEXT_TYPES.has(type) ? '#3a3a2e' : 'white';
+  return chip;
+}
+
+function renderCaption(side, p) {
+  const cap = $('caption' + side);
+  cap.textContent = p.name + ' ';
+  const dex = document.createElement('span');
+  dex.className = 'cap-dex';
+  dex.textContent = '#' + p.dex;
+  cap.appendChild(dex);
+}
 
 function render() {
   const p1 = pokemon[state.p1];
@@ -160,17 +218,10 @@ function render() {
 
   // badge (matches Shiny: whole-percent rounding)
   const s = score(state.p1, state.p2);
-  const text = Math.round(s * 100) + '%';
-  $('similarity').textContent = text;
-  if (text !== lastShownScore && lastShownScore !== null) {
-    const disp = $('similarity-display');
-    disp.classList.remove('score-changed');
-    void disp.offsetWidth; // restart the animation
-    disp.classList.add('score-changed');
-  }
-  lastShownScore = text;
+  animateScore(s * 100);
 
-  // images, optionally scaled by height ratio
+  // images, optionally scaled by height ratio; width is a percentage of
+  // the img-box so the proportion holds when the box shrinks on mobile
   const ratio = p1.height / p2.height;
   let size1 = IMG_SIZE, size2 = IMG_SIZE;
   if (state.scaleImages) {
@@ -180,9 +231,10 @@ function render() {
   for (const [img, p, size] of [[$('image1'), p1, size1], [$('image2'), p2, size2]]) {
     img.src = 'images/' + p.id + '.png';
     img.alt = p.name;
-    img.width = size;
-    img.height = size;
+    img.style.width = (100 * size / IMG_SIZE) + '%';
   }
+  renderCaption(1, p1);
+  renderCaption(2, p2);
 
   // stat grid
   const grid = $('grid');
@@ -194,6 +246,9 @@ function render() {
       if (p === null) {
         td.className = 'lbl';
         td.textContent = row.label;
+      } else if (row.chips) {
+        td.className = 'val';
+        for (const type of row.chips(p)) td.appendChild(makeTypeChip(type));
       } else if (row.key) {
         td.className = 'val';
         td.textContent = p[row.key];
@@ -250,6 +305,7 @@ function navigate(side, step) {
 
 function showEdit() {
   $('similarity-display').hidden = true;
+  $('find-match-row').hidden = true;
   $('similarity-edit').hidden = false;
   const inp = $('target_score');
   inp.value = '';
@@ -259,6 +315,7 @@ function showEdit() {
 function hideEdit() {
   $('similarity-edit').hidden = true;
   $('similarity-display').hidden = false;
+  $('find-match-row').hidden = false;
 }
 
 function findMatch() {
@@ -311,6 +368,7 @@ async function init() {
   });
 
   $('similarity-display').addEventListener('click', (e) => { e.stopPropagation(); showEdit(); });
+  $('find_match_toggle').addEventListener('click', (e) => { e.stopPropagation(); showEdit(); });
   $('fix_left').addEventListener('click', () => { state.fixedSide = 1; render(); });
   $('fix_right').addEventListener('click', () => { state.fixedSide = 2; render(); });
   $('find_match').addEventListener('click', findMatch);

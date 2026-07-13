@@ -33,6 +33,7 @@
 
       <div class="col-badge">
         <div id="similarity-display" class="similarity-badge"><span id="similarity"></span></div>
+        <div id="find-match-row"><button id="find_match_toggle" class="find-match-btn">Find a match&hellip;</button></div>
         <div id="similarity-edit" hidden>
           <div class="similarity-badge edit-badge">
             <input id="target_score" class="score-input" type="text" placeholder="85" maxlength="4">
@@ -66,13 +67,23 @@
 
     <div class="display-row">
       <div class="col-image">
-        <div class="pokemon-image"><div class="img-box"><img id="image1" width="300" height="300" alt=""></div></div>
+        <div class="pokemon-image">
+          <div class="img-box"><img id="image1" width="300" height="300" alt=""></div>
+          <div class="caption">
+            <div class="cap-name" id="caption1"></div>
+          </div>
+        </div>
       </div>
       <div class="col-grid">
         <table id="grid"></table>
       </div>
       <div class="col-image">
-        <div class="pokemon-image"><div class="img-box"><img id="image2" width="300" height="300" alt=""></div></div>
+        <div class="pokemon-image">
+          <div class="img-box"><img id="image2" width="300" height="300" alt=""></div>
+          <div class="caption">
+            <div class="cap-name" id="caption2"></div>
+          </div>
+        </div>
       </div>
     </div>
 
