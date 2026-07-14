@@ -164,10 +164,18 @@ let dropdown1, dropdown2;
 let lastShownPct = null;
 let scoreAnim = null;
 
-// -70% (observed floor) -> red, 100% -> green
+// piecewise hue ramp: deep red at the -70% floor, orange at 0%,
+// yellow at ~45%, green at 100%
+const COLOR_STOPS = [[-70, 0], [-35, 10], [0, 30], [45, 60], [100, 130]];
+
 function scoreColor(pct) {
-  const t = Math.max(0, Math.min(1, (pct + 70) / 170));
-  return 'hsl(' + Math.round(130 * t) + ', 62%, 38%)';
+  const p = Math.max(-70, Math.min(100, pct));
+  let i = 0;
+  while (i < COLOR_STOPS.length - 2 && p > COLOR_STOPS[i + 1][0]) i++;
+  const [x0, h0] = COLOR_STOPS[i];
+  const [x1, h1] = COLOR_STOPS[i + 1];
+  const h = h0 + (h1 - h0) * (p - x0) / (x1 - x0);
+  return 'hsl(' + Math.round(h) + ', 65%, 40%)';
 }
 
 function showScore(pct) {
