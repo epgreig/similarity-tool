@@ -19,6 +19,35 @@ let breakpoints = null;  // { colors: [...40], cuts: { hp: [...39], ... } }
 
 const state = { p1: 0, p2: 0, fixedSide: 1, scaleImages: false };
 const rankCache = new Map();
+const slugToIndex = new Map();
+let hashInitialized = false;
+
+// "Nidoran♀" -> "nidoran-f", "Flabébé" -> "flabebe", "Type: Null" -> "type-null"
+function slugify(name) {
+  return name.normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase().replace(/♀/g, '-f').replace(/♂/g, '-m')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function parseHash() {
+  const parts = location.hash.slice(1).split('/');
+  if (parts.length !== 2) return null;
+  const p1 = slugToIndex.get(parts[0]);
+  const p2 = slugToIndex.get(parts[1]);
+  return p1 !== undefined && p2 !== undefined ? [p1, p2] : null;
+}
+
+function updateHash() {
+  const h = slugify(pokemon[state.p1].name) + '/' + slugify(pokemon[state.p2].name);
+  const firstRender = !hashInitialized;
+  hashInitialized = true;
+  if (location.hash.slice(1) === h) return;
+  if (firstRender) {
+    history.replaceState(null, '', '#' + h); // don't pollute history on load
+  } else {
+    location.hash = h; // history entry: back/forward steps through comparisons
+  }
+}
 
 const $ = (id) => document.getElementById(id);
 
@@ -283,6 +312,8 @@ function render() {
   $('fix_right').textContent = p2.name;
   $('fix_left').classList.toggle('fix-active', state.fixedSide === 1);
   $('fix_right').classList.toggle('fix-active', state.fixedSide === 2);
+
+  updateHash();
 }
 
 function setPokemon(side, idx) {
@@ -354,8 +385,23 @@ async function init() {
   N = pokemon.length;
   if (scores.length !== N * N) throw new Error('similarity matrix size mismatch');
 
-  state.p1 = pokemon.findIndex((p) => p.name === 'Charizard');
-  state.p2 = pokemon.findIndex((p) => p.name === 'Blastoise');
+  pokemon.forEach((p, idx) => slugToIndex.set(slugify(p.name), idx));
+
+  const fromHash = parseHash();
+  if (fromHash) {
+    [state.p1, state.p2] = fromHash;
+  } else {
+    state.p1 = pokemon.findIndex((p) => p.name === 'Charizard');
+    state.p2 = pokemon.findIndex((p) => p.name === 'Blastoise');
+  }
+
+  window.addEventListener('hashchange', () => {
+    const m = parseHash();
+    if (m && (m[0] !== state.p1 || m[1] !== state.p2)) {
+      [state.p1, state.p2] = m;
+      render();
+    }
+  });
 
   dropdown1 = makeDropdown('select1', () => state.p1, (idx) => setPokemon(1, idx));
   dropdown2 = makeDropdown('select2', () => state.p2, (idx) => setPokemon(2, idx));
