@@ -240,6 +240,19 @@ button:hover { opacity: 0.85; }
 .caption { margin-top: 10px; }
 .cap-name { font-size: 12pt; font-weight: 700; }
 .cap-dex { color: #aaa; font-size: 9pt; font-weight: 400; }
+.see-matches-btn {
+  display: block;
+  margin: 8px auto 0;
+  font-size: 9pt;
+  padding: 3px 14px;
+  color: #888;
+  background-color: #e9ecef;
+  border-radius: 20px;
+}
+.see-matches-btn.active {
+  color: white;
+  background-color: #3498db;
+}
 .type-chip {
   display: block;
   width: fit-content;
@@ -272,6 +285,57 @@ button:hover { opacity: 0.85; }
 #grid td.lbl { width: 24%; font-size: 9pt; text-align: center; }
 #grid td.txt { font-size: 10pt; white-space: pre-line; }
 
+/* --- top matches strip (inside each pokemon card) --- */
+.matches-strip {
+  display: flex;
+  gap: 6px;
+  width: 300px;
+  margin-top: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+.matches-strip.fade-right {
+  mask-image: linear-gradient(to right, black calc(100% - 30px), transparent);
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 30px), transparent);
+}
+.matches-strip.fade-left {
+  mask-image: linear-gradient(to right, transparent, black 30px);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 30px);
+}
+.matches-strip.fade-left.fade-right {
+  mask-image: linear-gradient(to right, transparent, black 30px, black calc(100% - 30px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 30px, black calc(100% - 30px), transparent);
+}
+.match-card {
+  flex: 0 0 28%;
+  min-width: 0;
+  scroll-snap-align: start;
+  background: #f7f8fa;
+  border-radius: 10px;
+  padding: 6px 3px 5px;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: border-color 0.12s ease, background 0.12s ease, opacity 0.15s ease;
+}
+.match-card:hover { background: #eef4fa; opacity: 1; }
+.match-card.match-current { border-color: #3498db; }
+.match-card img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+.match-name {
+  font-size: 8pt;
+  font-weight: 600;
+  color: #2c3e50;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.match-score { font-size: 9pt; font-weight: 700; margin-top: 1px; }
+
 /* --- narrow screens: stack like the old Bootstrap layout --- */
 @media (max-width: 900px) {
   .controls-row { flex-wrap: wrap; align-items: center; }
@@ -291,4 +355,8 @@ button:hover { opacity: 0.85; }
   .pokemon-image .img-box { width: 100%; height: auto; aspect-ratio: 1 / 1; }
   .cap-name { font-size: 10.5pt; }
   .type-chip { padding: 1px 9px; font-size: 8.5pt; }
+  .matches-strip { width: 100%; }
+  .match-card img { width: 40px; height: 40px; }
+  .match-name { font-size: 7.5pt; }
+  .match-score { font-size: 8.5pt; }
 }

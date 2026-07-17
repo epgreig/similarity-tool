@@ -17,7 +17,7 @@ let scores = null;       // Int16Array, score(i,j) = scores[i*N+j] / 10000
 let N = 0;
 let breakpoints = null;  // { colors: [...40], cuts: { hp: [...39], ... } }
 
-const state = { p1: 0, p2: 0, fixedSide: 1, scaleImages: false };
+const state = { p1: 0, p2: 0, fixedSide: 1, scaleImages: false, matches1: false, matches2: false };
 const rankCache = new Map();
 const slugToIndex = new Map();
 let hashInitialized = false;
@@ -313,7 +313,55 @@ function render() {
   $('fix_left').classList.toggle('fix-active', state.fixedSide === 1);
   $('fix_right').classList.toggle('fix-active', state.fixedSide === 2);
 
+  renderMatches();
   updateHash();
+}
+
+function renderMatches() {
+  for (const side of [1, 2]) {
+    const open = state['matches' + side];
+    const strip = $('matches-strip' + side);
+    $('see_matches' + side).classList.toggle('active', open);
+    strip.hidden = !open;
+    if (!open) continue;
+
+    const anchor = side === 1 ? state.p1 : state.p2;
+    const otherSide = side === 1 ? 2 : 1;
+    const otherIdx = side === 1 ? state.p2 : state.p1;
+    const keepScroll = strip.dataset.anchor === String(anchor) ? strip.scrollLeft : 0;
+    strip.dataset.anchor = anchor;
+    strip.textContent = '';
+    const top = ranking(anchor).filter((j) => j !== anchor).slice(0, 10);
+    for (const j of top) {
+      const p = pokemon[j];
+      const card = document.createElement('button');
+      card.className = 'match-card' + (j === otherIdx ? ' match-current' : '');
+      card.title = p.name;
+      const img = document.createElement('img');
+      img.src = 'images/' + p.id + '.png';
+      img.alt = '';
+      img.loading = 'lazy';
+      const name = document.createElement('div');
+      name.className = 'match-name';
+      name.textContent = p.name;
+      const pct = document.createElement('div');
+      pct.className = 'match-score';
+      const s = score(anchor, j) * 100;
+      pct.textContent = Math.round(s) + '%';
+      pct.style.color = scoreColor(s);
+      card.append(img, name, pct);
+      card.addEventListener('click', () => setPokemon(otherSide, j));
+      strip.appendChild(card);
+    }
+    strip.scrollLeft = keepScroll;
+    updateStripFade(strip);
+  }
+}
+
+function updateStripFade(strip) {
+  const max = strip.scrollWidth - strip.clientWidth;
+  strip.classList.toggle('fade-right', strip.scrollLeft < max - 2);
+  strip.classList.toggle('fade-left', strip.scrollLeft > 2);
 }
 
 function setPokemon(side, idx) {
@@ -414,6 +462,14 @@ async function init() {
     $('next_similar' + side).addEventListener('click', () => navigate(side, -1));
     $('next_dissimilar' + side).addEventListener('click', () => navigate(side, +1));
     $('most_dissimilar' + side).addEventListener('click', () => navigate(side, 'least'));
+  }
+
+  for (const side of [1, 2]) {
+    $('see_matches' + side).addEventListener('click', () => {
+      state['matches' + side] = !state['matches' + side];
+      render();
+    });
+    $('matches-strip' + side).addEventListener('scroll', (e) => updateStripFade(e.target), { passive: true });
   }
 
   $('scale_images').addEventListener('change', (e) => {
