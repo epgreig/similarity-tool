@@ -299,14 +299,19 @@ function render() {
     grid.appendChild(tr);
   }
 
-  // dropdowns, nav tooltips, fix-side buttons
+  // dropdowns, rank pagers, fix-side buttons
   dropdown1.refresh();
   dropdown2.refresh();
-  for (const [side, name] of [[1, p1.name], [2, p2.name]]) {
-    $('most_similar' + side).title = 'Most Similar to ' + name;
-    $('next_similar' + side).title = 'More Similar to ' + name;
-    $('next_dissimilar' + side).title = 'Less Similar to ' + name;
-    $('most_dissimilar' + side).title = 'Least Similar to ' + name;
+  for (const side of [1, 2]) {
+    const anchor = side === 1 ? state.p2 : state.p1;
+    const own = side === 1 ? state.p1 : state.p2;
+    const anchorName = pokemon[anchor].name;
+    const pos = rankList(anchor).indexOf(own);
+    $('rank' + side).textContent = pos === -1 ? 'same Pokémon' : '#' + (pos + 1) + ' closest to ' + anchorName;
+    $('pager_first' + side).title = 'Most similar to ' + anchorName;
+    $('pager_prev' + side).title = 'More similar to ' + anchorName;
+    $('pager_next' + side).title = 'Less similar to ' + anchorName;
+    $('pager_last' + side).title = 'Least similar to ' + anchorName;
   }
   $('fix_left').textContent = p1.name;
   $('fix_right').textContent = p2.name;
@@ -369,23 +374,26 @@ function setPokemon(side, idx) {
   render();
 }
 
-// --- navigation --------------------------------------------------------------
+// --- rank pager ---------------------------------------------------------------
 
-// side = which Pokemon anchors the ranking; the *other* side gets changed
-function navigate(side, step) {
-  const anchor = side === 1 ? state.p1 : state.p2;
-  const other = side === 1 ? state.p2 : state.p1;
-  const r = ranking(anchor);
+// ranking(anchor) without the anchor itself; position k = (k+1)th closest match
+function rankList(anchor) {
+  return ranking(anchor).filter((j) => j !== anchor);
+}
+
+// steps the pager's own side through the other side's ranking
+function pagerNav(side, action) {
+  const anchor = side === 1 ? state.p2 : state.p1;
+  const own = side === 1 ? state.p1 : state.p2;
+  const list = rankList(anchor);
+  const pos = list.indexOf(own); // -1 when both sides are the same Pokemon
   let target;
-  if (step === 'most') {
-    target = r[0] === anchor ? r[1] : r[0];
-  } else if (step === 'least') {
-    target = r[N - 1];
-  } else {
-    const pos = r.indexOf(other);
-    target = r[Math.max(0, Math.min(N - 1, pos + step))];
-  }
-  setPokemon(side === 1 ? 2 : 1, target);
+  if (action === 'first') target = 0;
+  else if (action === 'last') target = list.length - 1;
+  else if (pos === -1) target = 0;
+  else if (action === 'prev') target = Math.max(0, pos - 1);
+  else target = Math.min(list.length - 1, pos + 1);
+  setPokemon(side, list[target]);
 }
 
 // --- similarity edit mode ------------------------------------------------------
@@ -458,10 +466,10 @@ async function init() {
   $('random2').addEventListener('click', () => setPokemon(2, Math.floor(Math.random() * N)));
 
   for (const side of [1, 2]) {
-    $('most_similar' + side).addEventListener('click', () => navigate(side, 'most'));
-    $('next_similar' + side).addEventListener('click', () => navigate(side, -1));
-    $('next_dissimilar' + side).addEventListener('click', () => navigate(side, +1));
-    $('most_dissimilar' + side).addEventListener('click', () => navigate(side, 'least'));
+    $('pager_first' + side).addEventListener('click', () => pagerNav(side, 'first'));
+    $('pager_prev' + side).addEventListener('click', () => pagerNav(side, 'prev'));
+    $('pager_next' + side).addEventListener('click', () => pagerNav(side, 'next'));
+    $('pager_last' + side).addEventListener('click', () => pagerNav(side, 'last'));
   }
 
   for (const side of [1, 2]) {

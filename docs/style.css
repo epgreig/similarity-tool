@@ -36,8 +36,7 @@ h3 {
   align-items: flex-start;
 }
 .col-select { width: 33.33%; text-align: center; padding: 0 15px; }
-.col-nav    { width: 8.33%;  padding: 0 2px; }
-.col-badge  { width: 16.67%; text-align: center; }
+.col-badge  { width: 33.33%; text-align: center; }
 .col-image  { width: 33.33%; text-align: center; }
 .col-grid   { width: 33.33%; text-align: center; }
 .display-row { margin-top: 18px; }
@@ -122,24 +121,30 @@ button:hover { opacity: 0.85; }
   border-radius: 8px;
 }
 
-.nav-btn-group {
+.rank-pager {
   display: flex;
-  flex-direction: column;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  margin-top: 2px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 7px;
 }
-.nav-btn {
-  padding: 5px 0;
-  width: 100%;
-  color: white;
-  border-top: 1px solid rgba(255,255,255,0.2);
-  line-height: 0;
+.pager-btn {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 50%;
+  background: #e9ecef;
+  color: #666;
+  font-size: 13px;
+  line-height: 1;
 }
-.nav-btn:first-child { border-top: none; }
-.nav-btn.dark  { background-color: rgb(51,122,183); }
-.nav-btn.light { background-color: rgb(120,180,240); }
+.pager-btn:hover { background: #3498db; color: white; opacity: 1; }
+.rank-label {
+  font-size: 9pt;
+  color: #666;
+  padding: 0 4px;
+  min-width: 150px;
+}
 
 /* --- similarity badge --- */
 .similarity-badge {
@@ -341,13 +346,8 @@ button:hover { opacity: 0.85; }
   .controls-row { flex-wrap: wrap; align-items: center; }
   .controls-row > .col-select { width: 50%; padding: 0 6px; }
   .controls-row > .col-select:nth-child(1) { order: 1; }
-  .controls-row > .col-select:nth-child(5) { order: 2; }
-  .controls-row > .col-nav:nth-child(2)    { order: 3; width: 25%; }
-  .controls-row > .col-badge               { order: 4; width: 50%; margin-top: 14px; }
-  .controls-row > .col-nav:nth-child(4)    { order: 5; width: 25%; }
-  .nav-btn-group { flex-direction: row; margin-top: 14px; }
-  .nav-btn { border-top: none; border-left: 1px solid rgba(255,255,255,0.2); padding: 8px 0; }
-  .nav-btn:first-child { border-left: none; }
+  .controls-row > .col-select:nth-child(3) { order: 2; }
+  .controls-row > .col-badge               { order: 3; width: 100%; margin-top: 14px; }
   .display-row { flex-wrap: wrap; }
   .display-row > .col-image { width: 50%; padding: 0 4px; }
   .display-row > .col-grid { order: 2; width: 100%; margin-top: 16px; }

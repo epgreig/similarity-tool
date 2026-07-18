@@ -22,15 +22,6 @@
         </button>
       </div>
 
-      <div class="col-nav">
-        <div class="nav-btn-group">
-          <button class="nav-btn dark" id="most_similar1"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 12 5 19 12"/><polyline points="5 19 12 12 19 19"/></svg></button>
-          <button class="nav-btn light" id="next_similar1"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 15 12 8 19 15"/></svg></button>
-          <button class="nav-btn light" id="next_dissimilar1"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 12 16 19 9"/></svg></button>
-          <button class="nav-btn dark" id="most_dissimilar1"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 12 19 19 12"/><polyline points="5 5 12 12 19 5"/></svg></button>
-        </div>
-      </div>
-
       <div class="col-badge">
         <div id="similarity-display" class="similarity-badge"><span id="similarity"></span></div>
         <div id="find-match-row"><button id="find_match_toggle" class="find-match-btn">Find a match&hellip;</button></div>
@@ -48,15 +39,6 @@
         </div>
       </div>
 
-      <div class="col-nav">
-        <div class="nav-btn-group">
-          <button class="nav-btn dark" id="most_similar2"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 12 5 19 12"/><polyline points="5 19 12 12 19 19"/></svg></button>
-          <button class="nav-btn light" id="next_similar2"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 15 12 8 19 15"/></svg></button>
-          <button class="nav-btn light" id="next_dissimilar2"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 12 16 19 9"/></svg></button>
-          <button class="nav-btn dark" id="most_dissimilar2"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 12 19 19 12"/><polyline points="5 5 12 12 19 5"/></svg></button>
-        </div>
-      </div>
-
       <div class="col-select">
         <div class="select-wrap" id="select2"></div>
         <button class="btn-random" id="random2" title="Randomize" aria-label="Randomize right Pokémon">
@@ -71,6 +53,13 @@
           <div class="img-box"><img id="image1" width="300" height="300" alt=""></div>
           <div class="caption">
             <div class="cap-name" id="caption1"></div>
+            <div class="rank-pager">
+              <button class="pager-btn" id="pager_first1">&laquo;</button>
+              <button class="pager-btn" id="pager_prev1">&lsaquo;</button>
+              <span class="rank-label" id="rank1"></span>
+              <button class="pager-btn" id="pager_next1">&rsaquo;</button>
+              <button class="pager-btn" id="pager_last1">&raquo;</button>
+            </div>
             <button id="see_matches1" class="see-matches-btn">Show most similar</button>
             <div class="matches-strip" id="matches-strip1" hidden></div>
           </div>
@@ -84,6 +73,13 @@
           <div class="img-box"><img id="image2" width="300" height="300" alt=""></div>
           <div class="caption">
             <div class="cap-name" id="caption2"></div>
+            <div class="rank-pager">
+              <button class="pager-btn" id="pager_first2">&laquo;</button>
+              <button class="pager-btn" id="pager_prev2">&lsaquo;</button>
+              <span class="rank-label" id="rank2"></span>
+              <button class="pager-btn" id="pager_next2">&rsaquo;</button>
+              <button class="pager-btn" id="pager_last2">&raquo;</button>
+            </div>
             <button id="see_matches2" class="see-matches-btn">Show most similar</button>
             <div class="matches-strip" id="matches-strip2" hidden></div>
           </div>
