@@ -21,6 +21,7 @@ const state = { p1: 0, p2: 0, fixedSide: 1, scaleImages: false, matches1: false,
 const rankCache = new Map();
 const slugToIndex = new Map();
 let hashInitialized = false;
+let suppressHashWrite = false;
 
 // "Nidoran♀" -> "nidoran-f", "Flabébé" -> "flabebe", "Type: Null" -> "type-null"
 function slugify(name) {
@@ -41,12 +42,9 @@ function updateHash() {
   const h = slugify(pokemon[state.p1].name) + '/' + slugify(pokemon[state.p2].name);
   const firstRender = !hashInitialized;
   hashInitialized = true;
-  if (location.hash.slice(1) === h) return;
-  if (firstRender) {
-    history.replaceState(null, '', '#' + h); // don't pollute history on load
-  } else {
-    location.hash = h; // history entry: back/forward steps through comparisons
-  }
+  if (suppressHashWrite || location.hash.slice(1) === h) return;
+  if (firstRender) return; // leave the URL bare until the user changes a selection
+  location.hash = h; // history entry: back/forward steps through comparisons
 }
 
 const $ = (id) => document.getElementById(id);
@@ -452,10 +450,15 @@ async function init() {
   }
 
   window.addEventListener('hashchange', () => {
-    const m = parseHash();
+    // back to the original bare URL restores the default pair
+    const m = location.hash.length <= 1
+      ? [slugToIndex.get('charizard'), slugToIndex.get('blastoise')]
+      : parseHash();
     if (m && (m[0] !== state.p1 || m[1] !== state.p2)) {
       [state.p1, state.p2] = m;
+      suppressHashWrite = true;
       render();
+      suppressHashWrite = false;
     }
   });
 
